@@ -1,0 +1,11 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "battleship game for Odin project with TDD",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "sajid",
+  "license": "ISC"
+}
