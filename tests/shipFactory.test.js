@@ -1,4 +1,4 @@
-import createShip from '../src/factories/ship';
+import createShip from '../src/factories/shipFactory';
 
 describe('Ship Factory', () => {
     test('creates ship with correct length', () => {
