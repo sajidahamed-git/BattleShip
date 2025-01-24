@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "jest --verbose",
-    "test:watch": "jest --watch"
+    "watch": "jest --watchAll"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",

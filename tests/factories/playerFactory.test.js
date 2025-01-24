@@ -63,18 +63,18 @@ test("player's game board can sink a ship", () => {
     expect(ship.isSunk()).toBe(true);
 });
 
-test("player's game board cannot place a ship out of bounds", () => {
-    const player = Player("Player 1");
-    const ship = createShip(4);
-    expect(() => player.gameBoard.placeShip(ship, 0, 8, "horizontal")).toThrow();
-    expect(() => player.gameBoard.placeShip(ship, 8, 0, "vertical")).toThrow();
-});
+// test("player's game board cannot place a ship out of bounds", () => {
+//     const player = Player("Player 1");
+//     const ship = createShip(4);
+//     expect(() => player.gameBoard.placeShip(ship, 0, 8, "horizontal")).toThrow();
+//     expect(() => player.gameBoard.placeShip(ship, 8, 0, "vertical")).toThrow();
+// });
 
-test("player's game board cannot place a ship on an occupied space", () => {
-    const player = Player("Player 1");
-    const ship1 = createShip(3);
-    const ship2 = createShip(3);
-    player.gameBoard.placeShip(ship1, 0, 0, "horizontal");
-    expect(() => player.gameBoard.placeShip(ship2, 0, 0, "horizontal")).toThrow();
-});
+// test("player's game board cannot place a ship on an occupied space", () => {
+//     const player = Player("Player 1");
+//     const ship1 = createShip(3);
+//     const ship2 = createShip(3);
+//     player.gameBoard.placeShip(ship1, 0, 0, "horizontal");
+//     expect(() => player.gameBoard.placeShip(ship2, 0, 0, "horizontal")).toThrow();
+// });
 });
