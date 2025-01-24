@@ -1,5 +1,11 @@
-const Player = ()=>{
-    return 1
+import createGameBoard from './gameBoardFactory'
+
+const Player = (name) =>{
+    const gameBoard = createGameBoard()
+    return {
+        name,
+        gameBoard
+    }
 }
 
 export default Player

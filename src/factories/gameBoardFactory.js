@@ -6,6 +6,13 @@ const createGameBoard = () => {
   const ships = [];
 
   const placeShip = (ship, row, col, direction) => {
+    //TODO: check if the ship is out of bounds
+    //or can be handled with DOM ie not allowing the user 
+    //to place a ship out of bounds
+
+
+
+
     //row and col are the starting position of the ship(head)
     if (direction === "horizontal") {
       for (let i = 0; i < ship.length; i++) {
