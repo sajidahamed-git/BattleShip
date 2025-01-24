@@ -4,8 +4,8 @@
   "description": "battleship game for Odin project with TDD",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "watch": "jest --watch"
+    "test": "jest --verbose",
+    "watch": "jest --watch --verbose"
   },
   "author": "sajid",
   "license": "ISC",
