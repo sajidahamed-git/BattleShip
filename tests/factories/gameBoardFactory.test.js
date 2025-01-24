@@ -101,6 +101,7 @@ describe("Gameboard Factory", () => {
     gameBoard.receiveAttack(0,2)
     expect(ship.isSunk()).toBe(true)
   })
+  
 });
 
 
