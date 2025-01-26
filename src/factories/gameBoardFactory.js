@@ -45,11 +45,15 @@ const createGameBoard = () => {
       return "hit";
     }
   };
-
+  
+  const render = () => {
+    return board.map((row) => row.join(" ")).join("\n");
+  };
   return {
     board,
     placeShip,
     receiveAttack,
+    render,
   };
 };
 
