@@ -75,6 +75,7 @@ const createGameBoard = () => {
   // const render = () => {
     // return board.map((row) => row.join(" ")).join("\n");
   // };
+  
   return {
     board,
     validateAndPlaceShip,

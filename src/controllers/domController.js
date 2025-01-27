@@ -1,7 +1,7 @@
 import game from "./gameController";
 // import currentShipIndex from 
 
-const createBoardCells = (boardElement) => {
+const createBoardCells = (boardElement,type) => {
     for (let i = 0; i < 10; i++) {
         for (let j = 0; j < 10; j++) {
           const cell = document.createElement("div");
@@ -14,11 +14,12 @@ const createBoardCells = (boardElement) => {
           );
           cell.dataset.row = i;
           cell.dataset.col = j;
-  
-          // Add click handler for ship placement
-          cell.addEventListener("click", () => {
-              game.handleShipEventListner(i, j);
+          if(type === "player"){
+            // Add click handler for ship placement
+            cell.addEventListener("click", () => {
+                game.handleShipEventListner(i, j);
             })
+          }
           boardElement.appendChild(cell);
         }
     }

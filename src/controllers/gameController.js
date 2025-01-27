@@ -1,6 +1,7 @@
 import Player from "../factories/playerFactory";
 import createShip from "../factories/shipFactory";
 import createBoardCells from "./domController";
+
 const game = (() => {
   
   // Initialize players
@@ -49,14 +50,39 @@ const game = (() => {
     }
   };
 
+  const getRandomCoordinate = () => Math.floor(Math.random() * 10);
+  const getRandomDirection = () => Math.random() < 0.5 ? "horizontal" : "vertical";
+
+  const placeComputerShips = () => {
+    ships.forEach(shipData => {
+      let placed = false;
+      while (!placed) {
+        try {
+          const ship = createShip(shipData.length);
+          const row = getRandomCoordinate();
+          const col = getRandomCoordinate();
+          const direction = getRandomDirection();
+          
+          computerBoard.validateAndPlaceShip(ship, row, col, direction);
+          placed = true;
+        } catch (error) {
+          // If placement fails, try again with new coordinates
+          continue;
+        }
+      }
+    });
+    console.log(`computerBoard.board: ${computerBoard.board}`);
+  };
+
   // Initialize the game
   const initialize = () => {
     const playerBoardElement = document.getElementById("player-board");
     const computerBoardElement = document.getElementById("computer-board");
 
     // Create board cells
-    createBoardCells(playerBoardElement);
-    createBoardCells(computerBoardElement);
+    createBoardCells(playerBoardElement,"player");
+    createBoardCells(computerBoardElement,"computer");
+    placeComputerShips();  // Place computer's ships during initialization
 
     // Set initial message with length
     gameMessage.textContent = `Place your ${ships[0].name} (length: ${ships[0].length})`;
