@@ -9,32 +9,38 @@ const createGameBoard = () => {
     if (direction === "horizontal") {
       // Check bounds first
       if (col + ship.length > 10 || row >= 10) {
-        throw new Error("Ship out of bounds");
+        throw new Error("Ship out of bounds - try again");
       }
 
-      // Then check for existing ships
+      // Validate all positions first
       for (let i = 0; i < ship.length; i++) {
         if (board[row][col + i] !== null) {
-          throw new Error("Ship already Placed");
-        } else {
-          board[row][col + i] = ship;
+          throw new Error("Ship already exists in this position - try again");
         }
+      }
+
+      // If validation passes, place the ship
+      for (let i = 0; i < ship.length; i++) {
+        board[row][col + i] = ship;
       }
     }
 
     if (direction === "vertical") {
       // Check bounds first
       if (row + ship.length > 10 || col >= 10) {
-        throw new Error("Ship out of bounds");
+        throw new Error("Ship out of bounds - try again");
       }
 
-      // Then check for existing ships
+      // Validate all positions first
       for (let i = 0; i < ship.length; i++) {
         if (board[row + i][col] !== null) {
-          throw new Error("Ship already Placed");
-        } else {
-          board[row + i][col] = ship;
+          throw new Error("Ship already exists in this position - try again");
         }
+      }
+
+      // If validation passes, place the ship
+      for (let i = 0; i < ship.length; i++) {
+        board[row + i][col] = ship;
       }
     }
 

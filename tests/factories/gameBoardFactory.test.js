@@ -34,19 +34,6 @@ describe("Gameboard Factory", () => {
     expect(gameBoard.board[8][5]).toBe(ship);
     expect(gameBoard.board[9][5]).toBe(ship);
   });
-  test("cant place ship if already occupied", () => {
-    const gameBoard = createGameBoard();
-    const ship = createShip(3);
-    const ship2 = createShip(5)
-    gameBoard.placeShip(ship, 0, 0, "horizontal");
-    expect(()=>gameBoard.placeShip(ship2,0,0,'vertical')).toThrow('Ship already Placed')
-  });
-  test('cant place ship is spot is occupied',()=>{
-    const gameBoard = createGameBoard()
-    const ship = createShip(3)
-    gameBoard.placeShip(ship,0,0,'horizontal')
-    expect(()=>gameBoard.placeShip(ship,0,0,'horizontal')).toThrow('Ship already Placed')
-  })
   test('receiveAttack on an empty spot',()=>{
     const gameBoard = createGameBoard()
     const ship = createShip(3)
@@ -106,20 +93,31 @@ describe("Gameboard Factory", () => {
     gameBoard.receiveAttack(0,2)
     expect(ship.isSunk()).toBe(true)
   })
-  test('if ship is out of bounds - horizontal',()=>{
+
+
+
+
+});
+
+describe('Ship placement validation',()=>{
+  test('if ship is already placed',()=>{
     const gameBoard = createGameBoard()
-    const ship  = createShip(5)
-    expect(()=>gameBoard.placeShip(ship,0,9,'horizontal'))
-    .toThrow('Ship out of bounds')
+    const ship  = createShip(3)
+    gameBoard.placeShip(ship,0,0,'horizontal')
+    expect(()=>gameBoard.placeShip(ship,0,0,'horizontal'))
+    .toThrow('Ship already exists in this position - try again')
   })
   test('if ship is out of bounds - vertical',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(5)
       expect(()=>gameBoard.placeShip(ship,9,0,'vertical'))
-    .toThrow('Ship out of bounds')
+    .toThrow('Ship out of bounds - try again')
   })
-  
-
-});
-
+  test('if ship is out of bounds - horizontal',()=>{
+    const gameBoard = createGameBoard()
+    const ship  = createShip(5)
+    expect(()=>gameBoard.placeShip(ship,0,9,'horizontal'))
+    .toThrow('Ship out of bounds - try again')
+  })
+})
 

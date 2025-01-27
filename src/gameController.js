@@ -51,6 +51,7 @@ const gameController = (() => {
         cell.addEventListener("click", () => {
           if (currentShipIndex < ships.length) {
             placeShip(i, j);
+            
           }
         });
 
@@ -76,6 +77,7 @@ const gameController = (() => {
   //     });
   // };
 
+  const gameMessage = document.getElementById("game-message");
   const placeShip = (row, col) => {
     const ship = createShip(ships[currentShipIndex].length);
     try {
@@ -85,7 +87,6 @@ const gameController = (() => {
       console.log(playerBoard.board);
 
       // Update game message
-      const gameMessage = document.getElementById("game-message");
       if (currentShipIndex < ships.length) {
         gameMessage.textContent = `Place your ${ships[currentShipIndex].name} (length: ${ships[currentShipIndex].length})`;
       } else {
@@ -94,6 +95,7 @@ const gameController = (() => {
         startButton.classList.remove("hidden");
       }
     } catch (error) {
+      gameMessage.textContent = error.message;
       console.error("Invalid placement:", error);
     }
   };
