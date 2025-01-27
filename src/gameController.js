@@ -1,7 +1,8 @@
 import Player from "./factories/playerFactory";
 import createShip from "./factories/shipFactory";
 import createBoardCells from "./domController";
-const gameController = (() => {
+const game = (() => {
+  
   // Initialize players
   const player = Player("Player 1");
   const computer = Player("Computer");
@@ -14,7 +15,7 @@ const gameController = (() => {
   const computerBoard = computer.gameBoard;
   // Ships to be placed
   const ships = [
-    { length: 6, name: "Carrier" },
+    { length: 6, name: "Carrier" },  
     { length: 5, name: "Battleship" },
     { length: 4, name: "Cruiser" },
     { length: 3, name: "Submarine" },
@@ -26,6 +27,8 @@ const gameController = (() => {
 
   const handleShipEventListner = (row, col) => {
     const ship = createShip(ships[currentShipIndex].length);
+    //todo :add some validation here when user clicks on cell after placing all ships
+    //ie currentShipIndex is greater than ships.length
     try {
       playerBoard.validateAndPlaceShip(ship, row, col, currentDirection);
       playerBoard.updateBoardDisplay();
@@ -72,4 +75,4 @@ const gameController = (() => {
   };
 })();
 
-export default gameController;
+export default game;

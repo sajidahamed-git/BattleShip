@@ -1,4 +1,4 @@
-import gameController from "./gameController";
+import game from "./gameController";
 // import currentShipIndex from 
 
 const createBoardCells = (boardElement) => {
@@ -17,7 +17,7 @@ const createBoardCells = (boardElement) => {
   
           // Add click handler for ship placement
           cell.addEventListener("click", () => {
-              gameController.handleShipEventListner(i, j);
+              game.handleShipEventListner(i, j);
             })
           boardElement.appendChild(cell);
         }
@@ -25,6 +25,6 @@ const createBoardCells = (boardElement) => {
 };
 const flipShipDirectionButton = document.getElementById("flip-ship-direction");
 flipShipDirectionButton.addEventListener("click", () => {
-    gameController.flipShipDirection();
+    game.flipShipDirection();
 });
 export default createBoardCells;
