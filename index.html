@@ -30,11 +30,11 @@
       </form>
 
       <!-- Game Container -->
-      <div id="game-container" class="flex justify-around items-end w-full hidden">
-        <div
-          id="player-board"
-          class="grid grid-cols-10 gap-1 border-2"
-        ></div>
+      <div
+        id="game-container"
+        class="flex justify-around items-end w-full hidden"
+      >
+        <div id="player-board" class="grid grid-cols-10 gap-1 border-2"></div>
         <div
           id="computer-board"
           class="grid grid-cols-10 gap-1 border-2 border-gray-500"
@@ -43,7 +43,19 @@
       <!-- Game Status -->
       <div id="game-status" class="mt-8 text-center text-xl">
         <!-- Game messages will go here -->
-         <button id="start-button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors hidden">Start Game</button>
+        <div class="text-center text-xl hidden mb-4" id="game-message"></div>
+        <button
+          id="flip-ship-direction"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors hidden"
+        >
+          current direction: horizontal click to flip
+        </button>
+        <button
+          id="start-button"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors hidden"
+        >
+          Start Game
+        </button>
       </div>
     </div>
     <script type="module" src="/src/main.js"></script>

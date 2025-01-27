@@ -6,35 +6,45 @@ const createGameBoard = () => {
   const ships = [];
 
   const placeShip = (ship, row, col, direction) => {
-    //TODO: check if the ship is out of bounds
-    //or can be handled with DOM ie not allowing the user 
-    //to place a ship out of bounds
-
-
-
-
-    //row and col are the starting position of the ship(head)
     if (direction === "horizontal") {
+      // Check bounds first
+      if (col + ship.length > 10 || row >= 10) {
+        throw new Error("Ship out of bounds");
+      }
+
+      // Then check for existing ships
       for (let i = 0; i < ship.length; i++) {
-        //placed along the row
-        //same row incrementing col
-        board[row][col + i] = ship;
+        if (board[row][col + i] !== null) {
+          throw new Error("Ship already Placed");
+        } else {
+          board[row][col + i] = ship;
+        }
       }
     }
+
     if (direction === "vertical") {
+      // Check bounds first
+      if (row + ship.length > 10 || col >= 10) {
+        throw new Error("Ship out of bounds");
+      }
+
+      // Then check for existing ships
       for (let i = 0; i < ship.length; i++) {
-        //placed along the column
-        //same column incrementing row
-        board[row + i][col] = ship;
+        if (board[row + i][col] !== null) {
+          throw new Error("Ship already Placed");
+        } else {
+          board[row + i][col] = ship;
+        }
       }
     }
+
     ships.push(ship);
   };
 
-  const receiveAttack = (x,y) => {
+  const receiveAttack = (x, y) => {
     //if attack is in an empty spot
-    if(board[x][y] === null){
-        board[x][y] = 'miss'
+    if (board[x][y] === null) {
+      board[x][y] = "miss";
     }
     //if attack is on a ship
     if (typeof board[x][y] === "object") {
@@ -45,7 +55,7 @@ const createGameBoard = () => {
       return "hit";
     }
   };
-  
+
   const render = () => {
     return board.map((row) => row.join(" ")).join("\n");
   };
@@ -58,4 +68,3 @@ const createGameBoard = () => {
 };
 
 export default createGameBoard;
-
