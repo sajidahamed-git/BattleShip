@@ -1,5 +1,5 @@
-import Player from "./factories/playerFactory";
-import createShip from "./factories/shipFactory";
+import Player from "../factories/playerFactory";
+import createShip from "../factories/shipFactory";
 import createBoardCells from "./domController";
 const game = (() => {
   
