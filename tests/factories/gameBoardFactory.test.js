@@ -19,7 +19,7 @@ describe("Gameboard Factory", () => {
   test("can place ship horizontally", () => {
     const gameBoard = createGameBoard();
     const ship = createShip(3);
-    gameBoard.placeShip(ship, 0, 0, "horizontal");
+    gameBoard.validateAndPlaceShip(ship, 0, 0, "horizontal");
     expect(gameBoard.board[0][0]).toBe(ship);
     expect(gameBoard.board[0][1]).toBe(ship);
     expect(gameBoard.board[0][2]).toBe(ship);
@@ -27,7 +27,7 @@ describe("Gameboard Factory", () => {
   test("can place ship vertically", () => {
     const gameBoard = createGameBoard();
     const ship = createShip(5);
-    gameBoard.placeShip(ship, 5, 5, "vertical");
+    gameBoard.validateAndPlaceShip(ship, 5, 5, "vertical");
     expect(gameBoard.board[5][5]).toBe(ship);
     expect(gameBoard.board[6][5]).toBe(ship);
     expect(gameBoard.board[7][5]).toBe(ship);
@@ -37,7 +37,7 @@ describe("Gameboard Factory", () => {
   test('receiveAttack on an empty spot',()=>{
     const gameBoard = createGameBoard()
     const ship = createShip(3)
-    gameBoard.placeShip(ship,0,0,'horizontal')
+    gameBoard.validateAndPlaceShip(ship,0,0,'horizontal')
 
     gameBoard.receiveAttack(9,9)// this will be empty
     expect(gameBoard.board[9][9]).toBe('miss')
@@ -45,7 +45,7 @@ describe("Gameboard Factory", () => {
   test('receiveAttack on a spot with the ship',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(4)
-    gameBoard.placeShip(ship,0,0,'horizontal')
+    gameBoard.validateAndPlaceShip(ship,0,0,'horizontal')
     gameBoard.receiveAttack(0,0) // there will be a ship here
     // expect(gameBoard.board[0][0]).toBe(ship)
     expect(gameBoard.board[0][0]).toBe('hit')
@@ -54,22 +54,22 @@ describe("Gameboard Factory", () => {
   test('check if ship is actually getting hit from the receiveAttack function',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(3)
-    gameBoard.placeShip(ship,0,0,'horizontal')
+    gameBoard.validateAndPlaceShip(ship,0,0,'horizontal')
     gameBoard.receiveAttack(0,0)
     expect(ship.hits).toBe(1)
   })
   test('check if ship is getting hit from the receiveAttack function',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(3)
-    gameBoard.placeShip(ship,0,0,'horizontal')
+    gameBoard.validateAndPlaceShip(ship,0,0,'horizontal')
    expect(gameBoard.receiveAttack(0,0)).toBe('hit')
   })
   test('if correct ship is being hit',()=>{
     const gameBoard = createGameBoard()
     const ship1  = createShip(3)
     const ship2  = createShip(4)
-    gameBoard.placeShip(ship1,0,0,'horizontal')
-    gameBoard.placeShip(ship2,3,3,'horizontal')
+    gameBoard.validateAndPlaceShip(ship1,0,0,'horizontal')
+    gameBoard.validateAndPlaceShip(ship2,3,3,'horizontal')
     gameBoard.receiveAttack(0,0)
     expect(ship1.hits).toBe(1)
     expect(ship2.hits).toBe(0)
@@ -77,7 +77,7 @@ describe("Gameboard Factory", () => {
   test('if gameBoard is logging misses and hits correctly',()=>{
     const gameBoard = createGameBoard()
     const ship1  = createShip(3)
-    gameBoard.placeShip(ship1,0,0,'horizontal')
+    gameBoard.validateAndPlaceShip(ship1,0,0,'horizontal')
     gameBoard.receiveAttack(0,0)
     gameBoard.receiveAttack(3,3)
     // console.log(gameBoard.board)
@@ -87,7 +87,7 @@ describe("Gameboard Factory", () => {
   test('if ship is sunk',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(3)
-    gameBoard.placeShip(ship,0,0,'horizontal')
+    gameBoard.validateAndPlaceShip(ship,0,0,'horizontal')
     gameBoard.receiveAttack(0,0)
     gameBoard.receiveAttack(0,1)
     gameBoard.receiveAttack(0,2)
@@ -103,20 +103,20 @@ describe('Ship placement validation',()=>{
   test('if ship is already placed',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(3)
-    gameBoard.placeShip(ship,0,0,'horizontal')
-    expect(()=>gameBoard.placeShip(ship,0,0,'horizontal'))
+    gameBoard.validateAndPlaceShip(ship,0,0,'horizontal')
+    expect(()=>gameBoard.validateAndPlaceShip(ship,0,0,'horizontal'))
     .toThrow('Ship already exists in this position - try again')
   })
   test('if ship is out of bounds - vertical',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(5)
-      expect(()=>gameBoard.placeShip(ship,9,0,'vertical'))
+      expect(()=>gameBoard.validateAndPlaceShip(ship,9,0,'vertical'))
     .toThrow('Ship out of bounds - try again')
   })
   test('if ship is out of bounds - horizontal',()=>{
     const gameBoard = createGameBoard()
     const ship  = createShip(5)
-    expect(()=>gameBoard.placeShip(ship,0,9,'horizontal'))
+    expect(()=>gameBoard.validateAndPlaceShip(ship,0,9,'horizontal'))
     .toThrow('Ship out of bounds - try again')
   })
 })

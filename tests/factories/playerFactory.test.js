@@ -19,7 +19,7 @@ describe("player Factory", () => {
   test("player can place a ship on their game board", () => {
     const player = Player("Player 1");
     const ship = createShip(3);
-    player.gameBoard.placeShip(ship, 0, 0, "horizontal");
+    player.gameBoard.validateAndPlaceShip(ship, 0, 0, "horizontal");
     expect(player.gameBoard.board[0][0]).toBe(ship);
     expect(player.gameBoard.board[0][1]).toBe(ship);
     expect(player.gameBoard.board[0][2]).toBe(ship);
@@ -28,7 +28,7 @@ describe("player Factory", () => {
   test("player's game board can receive an attack", () => {
     const player = Player("Player 1");
     const ship = createShip(2);
-    player.gameBoard.placeShip(ship, 1, 1, "vertical");
+    player.gameBoard.validateAndPlaceShip(ship, 1, 1, "vertical");
     player.gameBoard.receiveAttack(1, 1);
     expect(player.gameBoard.board[1][1]).toBe("hit");
   });
@@ -41,14 +41,14 @@ describe("player Factory", () => {
   test("player can place ship vertically", () => {
     const player = Player("Player 1");
     const ship = createShip(2);
-    player.gameBoard.placeShip(ship, 1, 1, "vertical");
+    player.gameBoard.validateAndPlaceShip(ship, 1, 1, "vertical");
     expect(player.gameBoard.board[1][1]).toBe(ship);
     expect(player.gameBoard.board[2][1]).toBe(ship);
   });
 test("player's game board can hit a ship and increase hits", () => {
     const player = Player("Player 1");
     const ship = createShip(3);
-    player.gameBoard.placeShip(ship, 0, 0, "horizontal");
+    player.gameBoard.validateAndPlaceShip(ship, 0, 0, "horizontal");
     player.gameBoard.receiveAttack(0, 0);
     expect(ship.hits).toBe(1);
 });
@@ -56,7 +56,7 @@ test("player's game board can hit a ship and increase hits", () => {
 test("player's game board can sink a ship", () => {
     const player = Player("Player 1");
     const ship = createShip(3);
-    player.gameBoard.placeShip(ship, 0, 0, "horizontal");
+    player.gameBoard.validateAndPlaceShip(ship, 0, 0, "horizontal");
     player.gameBoard.receiveAttack(0, 0);
     player.gameBoard.receiveAttack(0, 1);
     player.gameBoard.receiveAttack(0, 2);
