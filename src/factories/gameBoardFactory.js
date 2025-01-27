@@ -62,6 +62,7 @@ const createGameBoard = () => {
     }
   };
   const updateBoardDisplay = () => {
+    //adds dark shade to the board where player placed the ship
     board.forEach((row, i) => {
       row.forEach((cell, j) => {
         const cellElement = document.querySelector(`[data-row="${i}"][data-col="${j}"]`);

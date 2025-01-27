@@ -1,6 +1,7 @@
 import Player from "../factories/playerFactory";
 import createShip from "../factories/shipFactory";
 import createBoardCells from "./domController";
+import {updateColor} from "./domController";
 
 const game = (() => {
   
@@ -80,7 +81,13 @@ const game = (() => {
     console.log('function works');
     if (computerBoard.board[i][j] !== null) {
       console.log('hit');
-    } else console.log('miss');
+      updateColor(i,j,'hit');
+      
+
+    } else{
+       console.log('miss');
+       updateColor(i,j,'miss');
+      }
   }
 
   // Initialize the game

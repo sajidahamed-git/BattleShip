@@ -25,5 +25,5 @@ DOM.form.addEventListener("submit", (e) => {
 DOM.startButton.addEventListener("click", () => {
   console.log("start game");
 });
-
+  
 

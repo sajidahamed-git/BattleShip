@@ -29,8 +29,26 @@ const createBoardCells = (boardElement,type) => {
         }
     }
 };
+const updateColor = (i,j,status)=>{
+  console.log(i,j,status);
+  const computerBoard = document.getElementById('computer-board');
+  const cell = computerBoard.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+  if (status === 'hit') {
+    cell.classList.remove('bg-slate-300');
+    cell.classList.add('bg-red-500');
+    //cell is not an element
+  }
+  if (status === 'miss') {
+    cell.classList.remove('bg-slate-300');
+    cell.classList.add('bg-green-500');
+    
+  }
+  
+
+}
 const flipShipDirectionButton = document.getElementById("flip-ship-direction");
 flipShipDirectionButton.addEventListener("click", () => {
     game.flipShipDirection();
 });
 export default createBoardCells;
+export {updateColor};
