@@ -1,6 +1,6 @@
 import "./style.css";
 import gameController from "./gameController";
-
+import createBoardCells from "./domController";
 const form = document.getElementById("player-form");
 const gameContainer = document.getElementById("game-container");
 const gameMessage = document.getElementById("game-message");
@@ -9,6 +9,7 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
   const playerName = document.getElementById("player-name").value;
   gameController.initialize();
+
   gameMessage.classList.remove("hidden");
   gameContainer.classList.remove("hidden");
   form.classList.add("hidden");
@@ -16,6 +17,6 @@ form.addEventListener("submit", (e) => {
   flipShipDirection.classList.remove("hidden");
 });
 
-flipShipDirection.addEventListener("click", () => {
-  gameController.flipShipDirection();
-});
+// flipShipDirection.addEventListener("click", () => {
+//   gameController.flipShipDirection();
+// });

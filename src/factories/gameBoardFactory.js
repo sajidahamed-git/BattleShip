@@ -5,7 +5,7 @@ const createGameBoard = () => {
 
   const ships = [];
 
-  const placeShip = (ship, row, col, direction) => {
+  const validateAndPlaceShip = (ship, row, col, direction) => {
     if (direction === "horizontal") {
       // Check bounds first
       if (col + ship.length > 10 || row >= 10) {
@@ -61,15 +61,25 @@ const createGameBoard = () => {
       return "hit";
     }
   };
-
-  const render = () => {
-    return board.map((row) => row.join(" ")).join("\n");
+  const updateBoardDisplay = () => {
+    board.forEach((row, i) => {
+      row.forEach((cell, j) => {
+        const cellElement = document.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (cell && cell.length) {
+          cellElement.classList.add("bg-slate-500");
+        }
+      });
+    });
   };
+
+  // const render = () => {
+    // return board.map((row) => row.join(" ")).join("\n");
+  // };
   return {
     board,
-    placeShip,
+    validateAndPlaceShip,
     receiveAttack,
-    render,
+    updateBoardDisplay,
   };
 };
 
