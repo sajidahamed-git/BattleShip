@@ -7,6 +7,7 @@ const DOM = {
     gameMessage: document.getElementById("game-message"),
     flipShipDirection: document.getElementById("flip-ship-direction"),
     playerNameInput: document.getElementById("player-name"),
+    startButton: document.getElementById("start-button"),
 };
 
 DOM.form.addEventListener("submit", (e) => {
@@ -20,4 +21,9 @@ DOM.form.addEventListener("submit", (e) => {
   DOM.form.classList.add("hidden");
   DOM.flipShipDirection.classList.remove("hidden");
 });
+
+DOM.startButton.addEventListener("click", () => {
+  console.log("start game");
+});
+
 

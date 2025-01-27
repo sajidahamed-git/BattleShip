@@ -17,7 +17,12 @@ const createBoardCells = (boardElement,type) => {
           if(type === "player"){
             // Add click handler for ship placement
             cell.addEventListener("click", () => {
-                game.handleShipEventListner(i, j);
+                game.placePlayerShip(i, j);
+            })
+          }
+          else if(type === "computer"){
+            cell.addEventListener("click", () => {
+                game.playerAttack(i, j);
             })
           }
           boardElement.appendChild(cell);

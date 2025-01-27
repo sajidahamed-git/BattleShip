@@ -26,7 +26,7 @@ const game = (() => {
   let currentShipIndex = 0;
   let currentDirection = "horizontal"; // default direction
 
-  const handleShipEventListner = (row, col) => {
+  const placePlayerShip = (row, col) => {
     const ship = createShip(ships[currentShipIndex].length);
     //todo :add some validation here when user clicks on cell after placing all ships
     //ie currentShipIndex is greater than ships.length
@@ -34,7 +34,7 @@ const game = (() => {
       playerBoard.validateAndPlaceShip(ship, row, col, currentDirection);
       playerBoard.updateBoardDisplay();
       currentShipIndex++;
-      console.log(playerBoard.board);
+      // console.log(playerBoard.board);
 
       // Update game message
       if (currentShipIndex < ships.length) {
@@ -71,8 +71,17 @@ const game = (() => {
         }
       }
     });
-    console.log(`computerBoard.board: ${computerBoard.board}`);
+    console.log(computerBoard.board);
   };
+
+  //todo: make sure playerAttack only works when all ships are placed and start button is clicked
+  const playerAttack = (i,j)=>{
+    console.log(i,j);
+    console.log('function works');
+    if (computerBoard.board[i][j] !== null) {
+      console.log('hit');
+    } else console.log('miss');
+  }
 
   // Initialize the game
   const initialize = () => {
@@ -97,7 +106,8 @@ const game = (() => {
   return {
     initialize,
     flipShipDirection,
-    handleShipEventListner,
+    placePlayerShip,
+    playerAttack
   };
 })();
 
