@@ -4,13 +4,6 @@ import Player from "../factories/playerFactory";
 const shipPlacer = (() => {
     const getRandomCoordinate = () => Math.floor(Math.random() * 10);
     const getRandomDirection = () => Math.random() < 0.5 ? "horizontal" : "vertical";
-    
-    const player = Player("Player 1");
-    const computer = Player("Computer");
-    
-    const playerBoard = player.gameBoard;
-    const computerBoard = computer.gameBoard;
-
     const ships = [
         { length: 6, name: "Carrier" },  
         { length: 5, name: "Battleship" },
@@ -19,7 +12,7 @@ const shipPlacer = (() => {
         { length: 2, name: "Destroyer" },
       ];
 
-    const placeComputerShips = () => {
+    const placeComputerShips = (computerBoard) => {
         ships.forEach(shipData => {
             let placed = false;
             while (!placed) {

@@ -52,18 +52,12 @@ const game = (() => {
     }
   };
 
-  const playerAttack = (i,j)=>{
-    console.log(i,j);
-    console.log('function works');
+  const playerAttack = (i,j) => {
     if (computerBoard.board[i][j] !== null) {
-      console.log('hit');
       updateColor(i,j,'hit');
-      
-
-    } else{
-       console.log('miss');
-       updateColor(i,j,'miss');
-      }
+    } else {
+      updateColor(i,j,'miss');
+    }
   }
 
   // Initialize the game
@@ -74,7 +68,7 @@ const game = (() => {
     // Create board cells
     createBoardCells(playerBoardElement,"player");
     createBoardCells(computerBoardElement,"computer");
-    shipPlacer.placeComputerShips();  // Pass both the board and ships array
+    shipPlacer.placeComputerShips(computerBoard);  // Pass the computerBoard
 
     // Set initial message with length
     gameMessage.textContent = `Place your carrier (length: 6)`;
