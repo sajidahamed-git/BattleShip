@@ -1,5 +1,5 @@
 import game from "./gameController";
-// import currentShipIndex from 
+import shipPlacer from "./shipPlacer";
 
 const createBoardCells = (boardElement,type) => {
     for (let i = 0; i < 10; i++) {
@@ -17,7 +17,7 @@ const createBoardCells = (boardElement,type) => {
           if(type === "player"){
             // Add click handler for ship placement
             cell.addEventListener("click", () => {
-                game.placePlayerShip(i, j);
+                shipPlacer.placePlayerShip(i, j);
             })
           }
           // else if(type === "computer"){
@@ -60,7 +60,7 @@ const updateColor = (i,j,status)=>{
 }
 const flipShipDirectionButton = document.getElementById("flip-ship-direction");
 flipShipDirectionButton.addEventListener("click", () => {
-    game.flipShipDirection();
+    shipPlacer.flipShipDirection();
 });
 export default createBoardCells;
 export {updateColor,addAttackHandler};
