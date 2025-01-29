@@ -20,15 +20,27 @@ const createBoardCells = (boardElement,type) => {
                 game.placePlayerShip(i, j);
             })
           }
-          else if(type === "computer"){
-            cell.addEventListener("click", () => {
-                game.playerAttack(i, j);
-            })
-          }
+          // else if(type === "computer"){
+            // cell.addEventListener("click", () => {
+                // game.playerAttack(i, j);
+            // })
+          // }
           boardElement.appendChild(cell);
         }
     }
 };
+const addAttackHandler = () => {
+  console.log("you can attack now");
+  const computerBoard = document.getElementById('computer-board');
+  for(let i = 0; i < 10; i++){  
+    for(let j = 0; j < 10; j++){
+      const cell = computerBoard.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+      cell.addEventListener("click", (e) => {
+        game.playerAttack(i, j);
+    })
+    }
+  }
+}
 const updateColor = (i,j,status)=>{
   console.log(i,j,status);
   const computerBoard = document.getElementById('computer-board');
@@ -51,4 +63,4 @@ flipShipDirectionButton.addEventListener("click", () => {
     game.flipShipDirection();
 });
 export default createBoardCells;
-export {updateColor};
+export {updateColor,addAttackHandler};
