@@ -29,17 +29,22 @@
         </button>
       </form>
 
-      <!-- Game Container -->
-      <div
-        id="game-container"
-        class="flex justify-around items-end w-full hidden"
-      >
-        <div id="player-board" class="grid grid-cols-10 gap-1 border-2"></div>
-        <div
-          id="computer-board"
-          class="grid grid-cols-10 gap-1 border-2 border-gray-500"
-        ></div>
+      <!-- Game Container - Outer container only has hidden -->
+      <div id="game-container" class="hidden">
+        <!-- Inner container has flex layout -->
+        <div class="flex justify-around items-end w-full">
+          <div class="text-center">
+            <h2 class="text-xl font-semibold mb-4">Your Board</h2>
+            <div id="player-board" class="grid grid-cols-10 gap-1 border-2"></div>
+          </div>
+          
+          <div class="text-center">
+            <h2 class="text-xl font-semibold mb-4">Enemy Board</h2>
+            <div id="computer-board" class="grid grid-cols-10 gap-1 border-2 border-gray-500"></div>
+          </div>
+        </div>
       </div>
+
       <!-- Game Status -->
       <div id="game-status" class="mt-8 text-center text-xl">
         <!-- Game messages will go here -->
