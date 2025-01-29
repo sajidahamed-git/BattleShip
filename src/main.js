@@ -1,6 +1,7 @@
 import "./style.css";
 import game from "./controllers/gameController";
-import {addAttackHandler} from "./controllers/domController";
+import domController from "./controllers/domController";
+// import {addAttackHandler} from "./controllers/domController";
 
 const DOM = {
     form: document.getElementById("player-form"),
@@ -25,7 +26,8 @@ DOM.form.addEventListener("submit", (e) => {
 
 DOM.startButton.addEventListener("click", () => {
   console.log("start game");
-  addAttackHandler();
+  domController.addAttackHandler();
 });
   
+
 

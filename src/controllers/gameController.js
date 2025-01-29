@@ -1,7 +1,8 @@
 import Player from "../factories/playerFactory";
-import createBoardCells from "./domController";
-import {updateColor} from "./domController";
+// import createBoardCells from "./domController";
+// import {updateColor} from "./domController";
 import shipPlacer from "../controllers/shipPlacer";
+import domController from "./domController";
 
 const game = (() => {
   
@@ -15,8 +16,8 @@ const game = (() => {
     const computerBoardElement = document.getElementById("computer-board");
   
     // Create board cells
-    createBoardCells(playerBoardElement,"player");
-    createBoardCells(computerBoardElement,"computer");
+    domController.createBoardCells(playerBoardElement,"player");
+    domController.createBoardCells(computerBoardElement,"computer");
     shipPlacer.placeComputerShips(computerBoard);  // Pass the computerBoard
     // Set initial message with length
     gameMessage.textContent = `Place your carrier (length: 6)`;
@@ -24,9 +25,9 @@ const game = (() => {
   
   const playerAttack = (i,j) => {
     if (computerBoard.board[i][j] !== null) {
-      updateColor(i,j,'hit');
+      domController.updateColor(i,j,'hit');
     } else {
-      updateColor(i,j,'miss');
+      domController.updateColor(i,j,'miss');
     }
   }
 
