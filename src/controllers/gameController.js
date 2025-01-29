@@ -2,7 +2,7 @@ import Player from "../factories/playerFactory";
 import createShip from "../factories/shipFactory";
 import createBoardCells from "./domController";
 import {updateColor} from "./domController";
-import {placeComputerShips} from "./shipPlacer";
+import shipPlacer from "../controllers/shipPlacer";
 
 const game = (() => {
   
@@ -52,31 +52,6 @@ const game = (() => {
     }
   };
 
-  // const getRandomCoordinate = () => Math.floor(Math.random() * 10);
-  // const getRandomDirection = () => Math.random() < 0.5 ? "horizontal" : "vertical";
-
-  // const placeComputerShips = () => {
-  //   ships.forEach(shipData => {
-  //     let placed = false;
-  //     while (!placed) {
-  //       try {
-  //         const ship = createShip(shipData.length);
-  //         const row = getRandomCoordinate();
-  //         const col = getRandomCoordinate();
-  //         const direction = getRandomDirection();
-          
-  //         computerBoard.validateAndPlaceShip(ship, row, col, direction);
-  //         placed = true;
-  //       } catch (error) {
-  //         // If placement fails, try again with new coordinates
-  //         continue;
-  //       }
-  //     }
-  //   });
-  //   console.log(computerBoard.board);
-  // };
-
-  //todo: make sure playerAttack only works when all ships are placed and start button is clicked
   const playerAttack = (i,j)=>{
     console.log(i,j);
     console.log('function works');
@@ -99,10 +74,10 @@ const game = (() => {
     // Create board cells
     createBoardCells(playerBoardElement,"player");
     createBoardCells(computerBoardElement,"computer");
-    placeComputerShips(computerBoard, ships);  // Pass both the board and ships array
+    shipPlacer.placeComputerShips();  // Pass both the board and ships array
 
     // Set initial message with length
-    gameMessage.textContent = `Place your ${ships[0].name} (length: ${ships[0].length})`;
+    gameMessage.textContent = `Place your carrier (length: 6)`;
   };
 
   const flipShipDirection = () => {
