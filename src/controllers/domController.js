@@ -1,7 +1,7 @@
 import game from "./gameController";
 import shipPlacer from "./shipPlacer";
-const domController = (() => {
-  const createBoardCells = (boardElement, type) => {
+const domController =  {
+  createBoardCells: (boardElement, type) => {
     for (let i = 0; i < 10; i++) {
       for (let j = 0; j < 10; j++) {
         const cell = document.createElement("div");
@@ -23,8 +23,8 @@ const domController = (() => {
         boardElement.appendChild(cell);
       }
     }
-  };
-  const addAttackHandler = () => {
+  },
+  addAttackHandler: () => {
     console.log("you can attack now");
     const computerBoard = document.getElementById("computer-board");
     for (let i = 0; i < 10; i++) {
@@ -37,8 +37,8 @@ const domController = (() => {
         });
       }
     }
-  };
-  const updateColor = (i, j, status) => {
+  },
+  updateColor: (i, j, status) => {
     console.log(i, j, status);
     const computerBoard = document.getElementById("computer-board");
     const cell = computerBoard.querySelector(
@@ -53,20 +53,14 @@ const domController = (() => {
       cell.classList.remove("bg-slate-300");
       cell.classList.add("bg-green-500");
     }
-  };
+  },
 
-  const flipShipDirectionButton = document.getElementById(
-    "flip-ship-direction"
-  );
-  flipShipDirectionButton.addEventListener("click", () => {
-    shipPlacer.flipShipDirection();
-  });
-  return {
-    createBoardCells,
-    updateColor,
-    addAttackHandler,
-  };
-})();
+  attachFlipShipListener: (element) => {
+    element.addEventListener("click", () => {
+      shipPlacer.flipShipDirection();
+    });
+  },
+};
 // export default createBoardCells;
 // export { updateColor, addAttackHandler };
 export default domController;

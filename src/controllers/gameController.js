@@ -32,8 +32,7 @@ const game = (() => {
   }
 
   return {
-    initialize,
-    playerAttack,
+    initialize, playerAttack,
   };
 })();
 
