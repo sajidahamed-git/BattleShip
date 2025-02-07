@@ -60,6 +60,11 @@ const domController =  {
       shipPlacer.flipShipDirection();
     });
   },
+  gameMessageupdater: (text)=>{
+    const gameMessage = document.getElementById('game-message')
+    gameMessage.textContent  = text
+
+  }
 };
 // export default createBoardCells;
 // export { updateColor, addAttackHandler };
