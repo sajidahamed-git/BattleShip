@@ -37,6 +37,7 @@ const Game = (() => {
         const col = cell.dataset.col;
         if (HitComputerBoard.includes(`${row}${col}`)) {
           console.log("already hit");
+          gameMessage.textContent = "Attack already made at this position";
           return;
         }
         HitComputerBoard.push(`${row}${col}`);
