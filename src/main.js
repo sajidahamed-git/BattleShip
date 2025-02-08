@@ -1,7 +1,6 @@
 import "./style.css";
 import Game from "./controllers/gameController";
 import domController from "./controllers/domController";
-// import {addAttackHandler} from "./controllers/domController";
 
 const ui = {
   form: document.getElementById("player-form"),

@@ -1,7 +1,6 @@
 import createShip from "../factories/shipFactory";
 import Player from "../factories/playerFactory";
 import domController from "./domController";
-import game from "./gameController";
 
 const shipPlacer = (() => {
     const gameMessage = document.getElementById("game-message");
@@ -46,8 +45,6 @@ const shipPlacer = (() => {
     };
     const placePlayerShip = (row, col) => {
         const ship = createShip(ships[currentShipIndex].length);
-        //todo :add some validation here when user clicks on cell after placing all ships
-        //ie currentShipIndex is greater than ships.length
         try {
           playerBoard.validateAndPlaceShip(ship, row, col, currentDirection);
           playerBoard.updateBoardDisplay();
@@ -57,12 +54,7 @@ const shipPlacer = (() => {
     
           // Update game message
           if (currentShipIndex < ships.length) {
-            // gameMessage.textContent = `Place your ${ships[currentShipIndex].name} (length: ${ships[currentShipIndex].length})`;
-
-            // gameMessage.textContent = `Place your ${ships[currentShipIndex].name} (length: ${ships[currentShipIndex].length})`;
             domController.gameMessageupdater(`Place your ${ships[currentShipIndex].name} (length: ${ships[currentShipIndex].length})`)
-            
-
           } else {
             gameMessage.textContent = "All ships placed!";
             directionButton.classList.add("hidden");

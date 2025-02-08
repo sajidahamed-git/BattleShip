@@ -1,7 +1,6 @@
 import Player from "../factories/playerFactory";
 import shipPlacer from "../controllers/shipPlacer";
 import domController from "./domController";
-// import shipPlacer from "../controllers/shipPlacer";
 
 const Game = (() => {
   const computer = Player("Computer")
