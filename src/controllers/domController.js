@@ -24,18 +24,18 @@ const domController = {
       }
     }
   },
-  addAttackHandler: (event) => {
-    let currentPlayer = "player";
-    if (currentPlayer === "player") {
-      const cell = event.target;
-      if (cell.classList.contains("cell")) {
-        const row = cell.dataset.row;
-        const col = cell.dataset.col;
-        game.playerAttack(row, col);
-        currentPlayer = "computer";
-        game.computerTurn();
-      }
-    }
+  // addAttackHandler: (event) => {
+  //   let currentPlayer = "player";
+  //   if (currentPlayer === "player") {
+  //     const cell = event.target;
+  //     if (cell.classList.contains("cell")) {
+  //       const row = cell.dataset.row;
+  //       const col = cell.dataset.col;
+  //       game.playerAttack(row, col);
+  //       currentPlayer = "computer";
+  //       game.computerTurn();
+  //     }
+  //   }
     // for (let i = 0; i < 10; i++) {
     //   for (let j = 0; j < 10; j++) {
     //     const cell = computerBoard.querySelector(
@@ -46,7 +46,7 @@ const domController = {
     //     });
     //   }
     // }
-  },
+  // },
   updateColor: (i, j, status, board) => {
     // console.log(i, j, status);
     if ((board === "computer")) {
@@ -70,6 +70,8 @@ const domController = {
         `[data-row="${i}"][data-col="${j}"]`
       );
       if (status === "hit") {
+        cell.classList.remove('hover:bg-slate-600');
+        cell.classList.remove('bg-slate-500')
         cell.classList.remove("bg-slate-300");
         cell.classList.add("bg-red-500");
         //cell is not an element

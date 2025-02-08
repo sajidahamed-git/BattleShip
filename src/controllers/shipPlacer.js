@@ -42,7 +42,7 @@ const shipPlacer = (() => {
                 }
             }
         });
-        console.log(computerBoard.board);
+        // console.log(computerBoard.board);
     };
     const placePlayerShip = (row, col) => {
         const ship = createShip(ships[currentShipIndex].length);
@@ -51,6 +51,7 @@ const shipPlacer = (() => {
         try {
           playerBoard.validateAndPlaceShip(ship, row, col, currentDirection);
           playerBoard.updateBoardDisplay();
+          // console.log(playerBoard.board);
           currentShipIndex++;
           // console.log(playerBoard.board);
     
@@ -80,7 +81,8 @@ const shipPlacer = (() => {
     return {
         placeComputerShips,
         placePlayerShip,
-        flipShipDirection
+        flipShipDirection,
+        playerBoard: playerBoard.board
     };
 })();
 

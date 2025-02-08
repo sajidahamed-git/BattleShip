@@ -1,12 +1,14 @@
 import Player from "../factories/playerFactory";
-// import createBoardCells from "./domController";
-// import {updateColor} from "./domController";
 import shipPlacer from "../controllers/shipPlacer";
 import domController from "./domController";
+// import shipPlacer from "../controllers/shipPlacer";
 
 const Game = (() => {
-  const computer = Player("Computer");
+  const computer = Player("Computer")
   const computerBoard = computer.gameBoard;
+
+  const playerBoard  = shipPlacer.playerBoard
+
 
   const gameMessage = document.getElementById("game-message");
 
@@ -25,20 +27,25 @@ const Game = (() => {
     // Set initial message with length
     gameMessage.textContent = `Place your carrier (length: 6)`;
   };
-
+  let HitComputerBoard = []; //stores coordinates of already hit cells in computer board
+  let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
+  
   const handlePlayerAttack = (event) => {
     if (currentPlayer === "player") {
       const cell = event.target;
       if (cell.classList.contains("cell")) {
         const row = cell.dataset.row;
         const col = cell.dataset.col;
+        if (HitComputerBoard.includes(`${row}${col}`)) {
+          console.log("already hit");
+          return;
+        }
+        HitComputerBoard.push(`${row}${col}`);
         if (computerBoard.board[row][col] !== null) {
-          const ship = computerBoard.board[row][col];
-          ship.hit();
-          console.log(ship.hits);
-          console.log(`is ship sunk ${ship.isSunk()}`);
-          
+          const targetShip = computerBoard.board[row][col];
+          const hitStatus = targetShip.hit();
           domController.updateColor(row, col, "hit", "computer");
+
         } else domController.updateColor(row, col, "miss", "computer");
 
       }
@@ -50,17 +57,36 @@ const Game = (() => {
   };
 
   const computerTurn = () => {
-    console.log("computer turn started, wait for 5 seconds");
-    setTimeout(() => {
-      console.log("you can play now");
-      // start()
-      changeCurrentPlayer();
-    }, 5000);
+    console.log("computer's turn");
+    const row = getRandomRow();
+    const col = getRandomCol();
+    if (HitPlayerBoard.includes(`${row}${col}`)) {
+      console.log("already hit");
+      return;
+    }
+    // gameMessage.textContent = "Computer's turn";
+
+    HitPlayerBoard.push(`${row}${col}`);
+    console.log(HitPlayerBoard);
+    if (playerBoard[row][col] !== null) {
+      const targetShip = playerBoard[row][col];
+      targetShip.hit();
+      domController.updateColor(row, col, "hit", "player");
+    } else {
+      domController.updateColor(row, col, "miss", "player");
+    }
+    changeCurrentPlayer();
+
+    
+
   };
+
+
   const changeCurrentPlayer = () => {
     currentPlayer = currentPlayer === "player" ? "computer" : "player";
   };
-
+  const getRandomRow = () => Math.floor(Math.random() * 10);
+  const getRandomCol = () => Math.floor(Math.random() * 10);
   return {
     initialize,
     computerTurn,

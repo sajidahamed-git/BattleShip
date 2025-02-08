@@ -23,9 +23,8 @@ const createShip = (length) => {
       isSunk,
     get hits() {
         return hits;
-      }
+      },
+      type: 'ship',
     };
-  }
-
-  
-  export default createShip;  
+};
+export default createShip;
