@@ -32,6 +32,7 @@ const Game = (() => {
   const handlePlayerAttack = (event) => {
     if (currentPlayer === "player") {
       const cell = event.target;
+      console.log(cell);
       if (cell.classList.contains("cell")) {
         const row = cell.dataset.row;
         const col = cell.dataset.col;
@@ -48,9 +49,9 @@ const Game = (() => {
 
         } else domController.updateColor(row, col, "miss", "computer");
 
+        changeCurrentPlayer();
+        computerTurn();
       }
-      changeCurrentPlayer();
-      computerTurn();
     } else {
       console.log("wait for your turn");
     }
@@ -62,23 +63,28 @@ const Game = (() => {
     const col = getRandomCol();
     if (HitPlayerBoard.includes(`${row}${col}`)) {
       console.log("already hit");
+      computerTurn();
       return;
+      
+      //todo: issue here is that the computer is not changing the player's turn when it hits a cell that has already been hit
     }
     // gameMessage.textContent = "Computer's turn";
 
     HitPlayerBoard.push(`${row}${col}`);
-    console.log(HitPlayerBoard);
+
     if (playerBoard[row][col] !== null) {
       const targetShip = playerBoard[row][col];
       targetShip.hit();
       domController.updateColor(row, col, "hit", "player");
+      if (targetShip.isSunk()) {
+        console.log('sunk');
+        }
+        
+      
     } else {
       domController.updateColor(row, col, "miss", "player");
     }
     changeCurrentPlayer();
-
-    
-
   };
 
 
