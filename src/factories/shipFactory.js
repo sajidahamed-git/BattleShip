@@ -17,6 +17,7 @@ const createShip = (length) => {
     const isSunk = () => {
         return hits >= length;
     }
+        
     return {
       length,
       hit,

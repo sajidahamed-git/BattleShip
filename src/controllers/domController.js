@@ -39,6 +39,13 @@ const domController = {
         cell.classList.remove("bg-slate-300");
         cell.classList.add("bg-green-500");
       }
+      if (status === "dead") {
+        cell.classList.remove("bg-slate-300");
+        cell.classList.remove("bg-red-500");
+        // cell.classList.remove("hover:bg-green-500");
+        cell.classList.add("bg-black");
+        
+      }
     }
     if (board === 'player') {
       const playerBoard = document.getElementById("player-board");

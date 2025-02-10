@@ -28,11 +28,11 @@ const Game = (() => {
   };
   let HitComputerBoard = []; //stores coordinates of already hit cells in computer board
   let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
+  const targetShipCorordinates = []
   
   const handlePlayerAttack = (event) => {
     if (currentPlayer === "player") {
       const cell = event.target;
-      console.log(cell);
       if (cell.classList.contains("cell")) {
         const row = cell.dataset.row;
         const col = cell.dataset.col;
@@ -44,7 +44,23 @@ const Game = (() => {
         HitComputerBoard.push(`${row}${col}`);
         if (computerBoard.board[row][col] !== null) {
           const targetShip = computerBoard.board[row][col];
-          const hitStatus = targetShip.hit();
+          targetShip.hit();
+          const length = targetShip.length;
+          console.log(targetShip);
+
+
+          targetShipCorordinates.push(`${row}${col}`);
+          console.log(targetShipCorordinates);
+          if (targetShip.isSunk()) {
+            console.log('computer ship sunk');
+            //add the head and direction of the ship 
+            //to the createShip object and then update its value
+            //after placing the ship in the shipPlacer.js
+            //then use something like targetShip.head or
+            //targetShip.coordinates to get the position of the ship
+            //and then change the color using dom controller
+            
+          }
           domController.updateColor(row, col, "hit", "computer");
 
         } else domController.updateColor(row, col, "miss", "computer");
@@ -62,13 +78,11 @@ const Game = (() => {
     const row = getRandomRow();
     const col = getRandomCol();
     if (HitPlayerBoard.includes(`${row}${col}`)) {
-      console.log("already hit");
+      // console.log("already hit");
       computerTurn();
       return;
       
-      //todo: issue here is that the computer is not changing the player's turn when it hits a cell that has already been hit
     }
-    // gameMessage.textContent = "Computer's turn";
 
     HitPlayerBoard.push(`${row}${col}`);
 
