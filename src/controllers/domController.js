@@ -1,4 +1,4 @@
-import game from "./gameController";
+// import game from "./gameController";
 import shipPlacer from "./shipPlacer";
 const domController = {
   createBoardCells: (boardElement, type) => {

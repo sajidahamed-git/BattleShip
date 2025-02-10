@@ -27,6 +27,7 @@ ui.form.addEventListener("submit", (e) => {
 });
 ui.startButton.addEventListener("click", () => {
   console.log("start game");
+  Game.start()
   ui.startButton.classList.add('hidden')
-  domController.gameMessageupdater('Click on the enemy board to Attack')
+  // domController.gameMessageupdater('Click on the enemy board to Attack')
 });
