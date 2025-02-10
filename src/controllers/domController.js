@@ -39,7 +39,7 @@ const domController = {
         cell.classList.remove("bg-slate-300");
         cell.classList.add("bg-green-500");
       }
-      if (status === "dead") {
+      if (status === "sunk") {
         cell.classList.remove("bg-slate-300");
         cell.classList.remove("bg-red-500");
         // cell.classList.remove("hover:bg-green-500");
@@ -62,6 +62,12 @@ const domController = {
       if (status === "miss") {
         cell.classList.remove("bg-slate-300");
         cell.classList.add("bg-green-500");
+      }
+      if (status === 'sunk') {
+        cell.classList.remove("bg-slate-300");
+        cell.classList.remove("bg-red-500");
+        // cell.classList.remove("hover:bg-green-500");
+        cell.classList.add("bg-black");
       }
     }
   },

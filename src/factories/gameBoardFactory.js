@@ -3,7 +3,7 @@ const createGameBoard = () => {
     .fill(null)
     .map(() => Array(10).fill(null));
 
-  const ships = [];
+  // const ships = [];
 
   const validateAndPlaceShip = (ship, row, col, direction) => {
     if (direction === "horizontal") {
@@ -11,18 +11,18 @@ const createGameBoard = () => {
       if (col + ship.length > 10 || row >= 10) {
         throw new Error("Ship out of bounds - try again");
       }
-
       // Validate all positions first
       for (let i = 0; i < ship.length; i++) {
         if (board[row][col + i] !== null) {
           throw new Error("Ship already exists in this position - try again");
         }
       }
-
       // If validation passes, place the ship
       for (let i = 0; i < ship.length; i++) {
         board[row][col + i] = ship;
+        ship.shipCoordinates.push({ row, col: col + i });
       }
+      console.log(ship);
     }
 
     if (direction === "vertical") {
@@ -30,7 +30,6 @@ const createGameBoard = () => {
       if (row + ship.length > 10 || col >= 10) {
         throw new Error("Ship out of bounds - try again");
       }
-
       // Validate all positions first
       for (let i = 0; i < ship.length; i++) {
         if (board[row + i][col] !== null) {
@@ -41,10 +40,10 @@ const createGameBoard = () => {
       // If validation passes, place the ship
       for (let i = 0; i < ship.length; i++) {
         board[row + i][col] = ship;
+        ship.shipCoordinates.push({ row: row + i, col });
       }
+      console.log(ship);
     }
-
-    ships.push(ship);
   };
 
   const receiveAttack = (x, y) => {

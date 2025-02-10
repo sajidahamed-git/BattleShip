@@ -45,23 +45,19 @@ const Game = (() => {
         if (computerBoard.board[row][col] !== null) {
           const targetShip = computerBoard.board[row][col];
           targetShip.hit();
-          const length = targetShip.length;
           console.log(targetShip);
 
-
-          targetShipCorordinates.push(`${row}${col}`);
-          console.log(targetShipCorordinates);
+          // targetShipCorordinates.push(`${row}${col}`);
+          // console.log(targetShipCorordinates);
           if (targetShip.isSunk()) {
+            const shipCoordinates = targetShip.shipCoordinates;
             console.log('computer ship sunk');
-            //add the head and direction of the ship 
-            //to the createShip object and then update its value
-            //after placing the ship in the shipPlacer.js
-            //then use something like targetShip.head or
-            //targetShip.coordinates to get the position of the ship
-            //and then change the color using dom controller
-            
+            for (let index = 0; index < shipCoordinates.length; index++) {
+              const element = shipCoordinates[index];
+              domController.updateColor(element.row, element.col, "sunk", "computer");
+            }
           }
-          domController.updateColor(row, col, "hit", "computer");
+          else domController.updateColor(row, col, "hit", "computer");
 
         } else domController.updateColor(row, col, "miss", "computer");
 
@@ -81,7 +77,6 @@ const Game = (() => {
       // console.log("already hit");
       computerTurn();
       return;
-      
     }
 
     HitPlayerBoard.push(`${row}${col}`);
@@ -91,9 +86,14 @@ const Game = (() => {
       targetShip.hit();
       domController.updateColor(row, col, "hit", "player");
       if (targetShip.isSunk()) {
-        console.log('sunk');
+        const shipCoordinates = targetShip.shipCoordinates;
+        console.log('player ship sunk');
+        for (let index = 0; index < shipCoordinates.length; index++) {
+          const element = shipCoordinates[index];
+          domController.updateColor(element.row, element.col, "sunk", "player");
         }
         
+      }
       
     } else {
       domController.updateColor(row, col, "miss", "player");

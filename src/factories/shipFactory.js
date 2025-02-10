@@ -17,6 +17,7 @@ const createShip = (length) => {
     const isSunk = () => {
         return hits >= length;
     }
+    let shipCoordinates = [];
         
     return {
       length,
@@ -26,6 +27,7 @@ const createShip = (length) => {
         return hits;
       },
       type: 'ship',
+      shipCoordinates,
     };
 };
 export default createShip;
