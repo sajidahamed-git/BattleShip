@@ -1,13 +1,13 @@
 import Player from "../factories/playerFactory";
 import shipPlacer from "../controllers/shipPlacer";
 import domController from "./domController";
+import computerAttackLogic from "./computerAttackLogic";
 
 const Game = (() => {
-  const computer = Player("Computer")
+  const computer = Player("Computer");
   const computerBoard = computer.gameBoard;
 
-  const playerBoard  = shipPlacer.playerBoard
-
+  const playerBoard = shipPlacer.playerBoard;
 
   const gameMessage = document.getElementById("game-message");
 
@@ -29,13 +29,13 @@ const Game = (() => {
   const start = () => {
     computerBoardElement.addEventListener("click", handlePlayerAttack);
     domController.gameMessageupdater("Click on the enemy board to Attack");
-  }
+  };
   let HitComputerBoard = []; //stores coordinates of already hit cells in computer board
   let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
   // const targetShipCorordinates = []
-  
+
   let noofshipsSunkbytheplayer = 0;
-  let noofshipsSunkbythecomputer = 0;
+  // let noofshipsSunkbythecomputer = 0;
   const handlePlayerAttack = (event) => {
     if (currentPlayer === "player") {
       const cell = event.target;
@@ -54,27 +54,32 @@ const Game = (() => {
           gameMessage.textContent = "Click on the computer board to attack";
           const targetShip = computerBoard.board[row][col];
           targetShip.hit();
-          console.log(targetShip);
+          // console.log(targetShip);
 
           if (targetShip.isSunk()) {
             const shipCoordinates = targetShip.shipCoordinates;
-            console.log('computer ship sunk');
+            console.log("computer ship sunk");
             for (let index = 0; index < shipCoordinates.length; index++) {
               const element = shipCoordinates[index];
-              domController.updateColor(element.row, element.col, "sunk", "computer");
+              domController.updateColor(
+                element.row,
+                element.col,
+                "sunk",
+                "computer"
+              );
             }
             noofshipsSunkbytheplayer++;
             if (noofshipsSunkbytheplayer === 5) {
               gameMessage.textContent = "Player won! Game Over";
               gameOver = true;
               // Add logic to prevent further attacks by player and computer
-              computerBoardElement.removeEventListener("click", handlePlayerAttack);
+              computerBoardElement.removeEventListener(
+                "click",
+                handlePlayerAttack
+              );
               return;
             }
-            
-          }
-          else domController.updateColor(row, col, "hit", "computer");
-
+          } else domController.updateColor(row, col, "hit", "computer");
         } else domController.updateColor(row, col, "miss", "computer");
 
         changeCurrentPlayer();
@@ -86,44 +91,29 @@ const Game = (() => {
   };
 
   const computerTurn = () => {
-    console.log("computer's turn");
-    const row = getRandomRow();
-    const col = getRandomCol();
-    if (HitPlayerBoard.includes(`${row}${col}`)) {
-      // console.log("already hit");
-      computerTurn();
-      return;
-    }
-
-    HitPlayerBoard.push(`${row}${col}`);
-
-    if (playerBoard[row][col] !== null) {
-      const targetShip = playerBoard[row][col];
-      targetShip.hit();
-      domController.updateColor(row, col, "hit", "player");
-      if (targetShip.isSunk()) {
-        const shipCoordinates = targetShip.shipCoordinates;
-        console.log('player ship sunk');
-        for (let index = 0; index < shipCoordinates.length; index++) {
-          const element = shipCoordinates[index];
-          domController.updateColor(element.row, element.col, "sunk", "player");
-        }
-        noofshipsSunkbythecomputer++;
-        if (noofshipsSunkbythecomputer === 5) {
-          gameMessage.textContent = "Computer has won. Game Over!";
-          gameOver = true;
-
-          computerBoardElement.removeEventListener("click", handlePlayerAttack);
-          return;
-        }
+      // console.log("computer's turn");
+      const row = getRandomRow();
+      const col = getRandomCol();
+      if (HitPlayerBoard.includes(`${row}${col}`)) {
+        // console.log("already hit");
+        computerTurn();
+        return;
       }
-      
-    } else {
-      domController.updateColor(row, col, "miss", "player");
-    }
-    changeCurrentPlayer();
-  };
+      HitPlayerBoard.push(`${row}${col}`);
 
+      if (playerBoard[row][col] !== null) {
+        computerAttackLogic.hit(row, col);
+
+        // console.log('hit');
+        changeCurrentPlayer();
+      } else {
+        // previousHit.isHit = false;
+        computerAttackLogic.resetPreviousHit();
+        console.log("missed");
+        domController.updateColor(row, col, "miss", "player");
+        changeCurrentPlayer();
+      }
+    }
 
   const changeCurrentPlayer = () => {
     currentPlayer = currentPlayer === "player" ? "computer" : "player";
@@ -133,8 +123,6 @@ const Game = (() => {
   return {
     initialize,
     start,
-    // computerTurn,
-    // changeCurrentPlayer
   };
 })();
 
