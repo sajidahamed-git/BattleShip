@@ -18,24 +18,20 @@ const Game = (() => {
   const initialize = () => {
     playerBoardElement = document.getElementById("player-board");
     computerBoardElement = document.getElementById("computer-board");
-    // computerBoardElement.addEventListener("click", handlePlayerAttack);
-    // Create board cells
     domController.createBoardCells(playerBoardElement, "player");
     domController.createBoardCells(computerBoardElement, "computer");
-    shipPlacer.placeComputerShips(computerBoard); // Pass the computerBoard
-    // Set initial message with length
+    shipPlacer.placeComputerShips(computerBoard);
     gameMessage.textContent = `Place your carrier (length: 6)`;
   };
+
   const start = () => {
     computerBoardElement.addEventListener("click", handlePlayerAttack);
     domController.gameMessageupdater("Click on the enemy board to Attack");
   };
-  let HitComputerBoard = []; //stores coordinates of already hit cells in computer board
-  let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
-  // const targetShipCorordinates = []
 
+  let HitComputerBoard = [];
   let noofshipsSunkbytheplayer = 0;
-  // let noofshipsSunkbythecomputer = 0;
+
   const handlePlayerAttack = (event) => {
     if (currentPlayer === "player") {
       const cell = event.target;
@@ -54,7 +50,6 @@ const Game = (() => {
           gameMessage.textContent = "Click on the computer board to attack";
           const targetShip = computerBoard.board[row][col];
           targetShip.hit();
-          // console.log(targetShip);
 
           if (targetShip.isSunk()) {
             const shipCoordinates = targetShip.shipCoordinates;
@@ -72,7 +67,6 @@ const Game = (() => {
             if (noofshipsSunkbytheplayer === 5) {
               gameMessage.textContent = "Player won! Game Over";
               gameOver = true;
-              // Add logic to prevent further attacks by player and computer
               computerBoardElement.removeEventListener(
                 "click",
                 handlePlayerAttack
@@ -90,36 +84,38 @@ const Game = (() => {
     }
   };
 
+  let previousHit = { isHit: false, row: null, col: null };
+  let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
   const computerTurn = () => {
-      // console.log("computer's turn");
-      const row = getRandomRow();
-      const col = getRandomCol();
-      if (HitPlayerBoard.includes(`${row}${col}`)) {
-        // console.log("already hit");
-        computerTurn();
-        return;
-      }
-      HitPlayerBoard.push(`${row}${col}`);
+    let row, col;
+    do {
+      row = getRandomRow();
+      col = getRandomCol();
+    } while (HitPlayerBoard.includes(`${row}${col}`));
+    HitPlayerBoard.push(`${row}${col}`);
 
+    if (previousHit.isHit === true) {
+      previousHit = computerAttackLogic.smartHit(previousHit, HitPlayerBoard);
+    } else {
       if (playerBoard[row][col] !== null) {
-        computerAttackLogic.hit(row, col);
-
-        // console.log('hit');
-        changeCurrentPlayer();
+        console.log('hit from random hit');
+        previousHit = computerAttackLogic.hit(row, col);
       } else {
-        // previousHit.isHit = false;
-        computerAttackLogic.resetPreviousHit();
-        console.log("missed");
+        previousHit = { isHit: false, row: null, col: null };
+        console.log("missed while trying to random hit");
         domController.updateColor(row, col, "miss", "player");
-        changeCurrentPlayer();
       }
     }
+    changeCurrentPlayer();
+  };
 
   const changeCurrentPlayer = () => {
     currentPlayer = currentPlayer === "player" ? "computer" : "player";
   };
+
   const getRandomRow = () => Math.floor(Math.random() * 10);
   const getRandomCol = () => Math.floor(Math.random() * 10);
+
   return {
     initialize,
     start,
