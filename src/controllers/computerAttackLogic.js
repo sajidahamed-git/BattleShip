@@ -1,61 +1,102 @@
 import domController from "./domController";
 import shipPlacer from "../controllers/shipPlacer";
-import Game from "./gameController";
 
 const computerAttackLogic = (() => {
   const playerBoard = shipPlacer.playerBoard;
   let noofshipsSunkbythecomputer = 0;
-  const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
 
-  const hit = (row, col) => {
+  const gameMessage = document.getElementById("game-message");
+
+  const RandomHit = (HitPlayerBoard) => {
+    let row, col;
+    do {
+      row = Math.floor(Math.random() * 10);
+      col = Math.floor(Math.random() * 10);
+    } while (HitPlayerBoard.includes(`${row}${col}`));
     const targetShip = playerBoard[row][col];
-    targetShip.hit();
 
-    domController.updateColor(row, col, "hit", "player");
+    if (targetShip) {
+      return handleSuccessfulHit(row, col);
+    }else {
 
-    if (targetShip.isSunk()) {
-      const shipCoordinates = targetShip.shipCoordinates;
-      console.log("player ship sunk");
-      for (let index = 0; index < shipCoordinates.length; index++) {
-        const element = shipCoordinates[index];
-        domController.updateColor(element.row, element.col, "sunk", "player");
-      }
-      noofshipsSunkbythecomputer++;
-      if (noofshipsSunkbythecomputer === 5) {
-        gameMessage.textContent = "Computer has won. Game Over!";
-        computerBoardElement.removeEventListener("click", handlePlayerAttack);
-      }
-      return { isHit: false, row: null, col: null };
+      return handleMiss(row, col);
     }
-    return { isHit: true, row, col };
+    
   };
 
   const smartHit = (previousHit, HitPlayerBoard) => {
+    const directions = [
+      [0, 1],
+      [1, 0],
+      [0, -1],
+      [-1, 0],
+    ];
     console.log("smart hit called");
     for (let [dx, dy] of directions) {
       let newRow = previousHit.row + dx;
       let newCol = previousHit.col + dy;
-      if (HitPlayerBoard.includes(`${newRow}${newCol}`)) {
+      let coordinatekey = `${newRow}${newCol}`;
+
+      if (
+        HitPlayerBoard.includes(coordinatekey) ||
+        !isValidCoordinate(newRow, newCol)
+      ) {
         continue;
       }
-      if (newRow >= 0 && newRow < 10 && newCol >= 0 && newCol < 10) {
-        if (playerBoard[newRow][newCol] !== null) {
-          console.log('hit from smart hit');
-          return hit(newRow, newCol);
-        } else {
-          // when smart hit misses
-          console.log('missed while trying to smart hit');
-          domController.updateColor(newRow, newCol, "miss", "player");
-          return { isHit: false, row: null, col: null };
-        }
+
+      const targetShip = playerBoard[newRow][newCol];
+      if (targetShip) {
+        return handleSuccessfulHit(newRow, newCol);
+        
+      }else{
+        return handleMiss(newRow, newCol);
       }
+    
+
     }
-    console.log('no valid smart hit found');
-    Game.computerTurn(); // check if this is correct 
-    return { isHit: false, row: null, col: null };
+    console.log("no valid smart hit found");
+    return RandomHit(HitPlayerBoard);
   };
 
+  const isValidCoordinate = (row, col) => {
+    if (row >= 0 && row < 10 && col >= 0 && col < 10) {
+      return true;
+    }
+    return false;
+  };
 
-  return { hit, smartHit };
+  
+  const handleSuccessfulHit = (row, col) => {
+    const targetShip = playerBoard[row][col];
+
+    targetShip.hit();
+    domController.updateColor(row, col, "hit", "player");
+
+    if (targetShip.isSunk()) {
+      handleShipSunk(targetShip);
+    }
+
+    return { isHit: true, row, col };
+  };
+
+  const handleMiss = (row, col) => {
+    domController.updateColor(row, col, "miss", "player");
+    return { isHit: false, row, col };
+  };
+
+  const handleShipSunk = (targetShip) => {
+    for (let { row, col } of targetShip.shipCoordinates) {
+      domController.updateColor(row, col, "sunk", "player");
+    }
+    noofshipsSunkbythecomputer++;
+
+    if (noofshipsSunkbythecomputer === 5) {
+      gameMessage.textContent = "Computer has won. Game Over!";
+      // computerBoardElement.removeEventListener("click", handlePlayerAttack);
+    }
+  };
+
+  return { RandomHit, smartHit };
 })();
+
 export default computerAttackLogic;

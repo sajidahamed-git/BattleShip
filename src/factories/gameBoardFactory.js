@@ -22,7 +22,7 @@ const createGameBoard = () => {
         board[row][col + i] = ship;
         ship.shipCoordinates.push({ row, col: col + i });
       }
-      console.log(ship);
+      // console.log(ship);
     }
 
     if (direction === "vertical") {
@@ -42,7 +42,7 @@ const createGameBoard = () => {
         board[row + i][col] = ship;
         ship.shipCoordinates.push({ row: row + i, col });
       }
-      console.log(ship);
+      // console.log(ship);
     }
   };
 

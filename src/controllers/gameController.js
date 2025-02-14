@@ -21,7 +21,10 @@ const Game = (() => {
     domController.createBoardCells(playerBoardElement, "player");
     domController.createBoardCells(computerBoardElement, "computer");
     shipPlacer.placeComputerShips(computerBoard);
+    const gameMessage = document.getElementById("game-message");
+
     gameMessage.textContent = `Place your carrier (length: 6)`;
+    return true; // for testing purposes
   };
 
   const start = () => {
@@ -50,30 +53,13 @@ const Game = (() => {
           gameMessage.textContent = "Click on the computer board to attack";
           const targetShip = computerBoard.board[row][col];
           targetShip.hit();
+          domController.updateColor(row, col, "hit", "computer");
 
           if (targetShip.isSunk()) {
-            const shipCoordinates = targetShip.shipCoordinates;
-            console.log("computer ship sunk");
-            for (let index = 0; index < shipCoordinates.length; index++) {
-              const element = shipCoordinates[index];
-              domController.updateColor(
-                element.row,
-                element.col,
-                "sunk",
-                "computer"
-              );
-            }
-            noofshipsSunkbytheplayer++;
-            if (noofshipsSunkbytheplayer === 5) {
-              gameMessage.textContent = "Player won! Game Over";
-              gameOver = true;
-              computerBoardElement.removeEventListener(
-                "click",
-                handlePlayerAttack
-              );
+            handleComputerShipSunk(targetShip);
               return;
             }
-          } else domController.updateColor(row, col, "hit", "computer");
+         
         } else domController.updateColor(row, col, "miss", "computer");
 
         changeCurrentPlayer();
@@ -87,38 +73,39 @@ const Game = (() => {
   let previousHit = { isHit: false, row: null, col: null };
   let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
   const computerTurn = () => {
-    let row, col;
-    do {
-      row = getRandomRow();
-      col = getRandomCol();
-    } while (HitPlayerBoard.includes(`${row}${col}`));
-    HitPlayerBoard.push(`${row}${col}`);
-
-    if (previousHit.isHit === true) {
-      previousHit = computerAttackLogic.smartHit(previousHit, HitPlayerBoard);
-    } else {
-      if (playerBoard[row][col] !== null) {
-        console.log('hit from random hit');
-        previousHit = computerAttackLogic.hit(row, col);
-      } else {
-        previousHit = { isHit: false, row: null, col: null };
-        console.log("missed while trying to random hit");
-        domController.updateColor(row, col, "miss", "player");
-      }
+    let result
+    if (!previousHit.isHit) {
+      result = computerAttackLogic.RandomHit(HitPlayerBoard);
+    } else{
+      result = computerAttackLogic.smartHit(previousHit, HitPlayerBoard);
+    }
+    if (result.row !==null && result.col !==null) {
+      HitPlayerBoard.push(`${result.row}${result.col}`);
+      previousHit = result;
     }
     changeCurrentPlayer();
+    return true; // for teting purposes
   };
 
   const changeCurrentPlayer = () => {
     currentPlayer = currentPlayer === "player" ? "computer" : "player";
   };
 
-  const getRandomRow = () => Math.floor(Math.random() * 10);
-  const getRandomCol = () => Math.floor(Math.random() * 10);
+  const handleComputerShipSunk = (targetShip) => {
+    for (let { row, col } of targetShip.shipCoordinates) {
+      domController.updateColor(row, col, "sunk", "computer");
+    }
+    noofshipsSunkbytheplayer++;
+
+    if (noofshipsSunkbytheplayer === 5) {
+      gameMessage.textContent = "Player has won. Game Over!";
+      computerBoardElement.removeEventListener("click", handlePlayerAttack);
+    }
+  }
 
   return {
     initialize,
-    start,
+    start
   };
 })();
 
