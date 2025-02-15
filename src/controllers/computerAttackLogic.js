@@ -1,8 +1,7 @@
 import domController from "./domController";
 import shipPlacer from "../controllers/shipPlacer";
-//issues to address if a ship is sunk with smart hit then 
-//smart hit is called again ie attacking to left again
-//this wastes a move fix after implementing hunting mode
+//hunting mode keeps hunting one column down sometimes
+
 const computerAttackLogic = (() => {
   const playerBoard = shipPlacer.playerBoard;
   let noofshipsSunkbythecomputer = 0;
@@ -82,11 +81,6 @@ const computerAttackLogic = (() => {
     return RandomHit(HitPlayerBoard);
 
   }
-
-
-
-
-
 
   const isValidCoordinate = (row, col) => {
     if (row >= 0 && row < 10 && col >= 0 && col < 10) {
