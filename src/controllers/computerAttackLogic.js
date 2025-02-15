@@ -1,6 +1,8 @@
 import domController from "./domController";
 import shipPlacer from "../controllers/shipPlacer";
-
+//issues to address if a ship is sunk with smart hit then 
+//smart hit is called again ie attacking to left again
+//this wastes a move fix after implementing hunting mode
 const computerAttackLogic = (() => {
   const playerBoard = shipPlacer.playerBoard;
   let noofshipsSunkbythecomputer = 0;
@@ -16,10 +18,10 @@ const computerAttackLogic = (() => {
     const targetShip = playerBoard[row][col];
 
     if (targetShip) {
-      return handleSuccessfulHit(row, col);
+      return handleSuccessfulHit(row, col,'random');
     }else {
 
-      return handleMiss(row, col);
+      return handleMiss(row, col,'random');
     }
     
   };
@@ -31,7 +33,6 @@ const computerAttackLogic = (() => {
       [0, -1],
       [-1, 0],
     ];
-    console.log("smart hit called");
     for (let [dx, dy] of directions) {
       let newRow = previousHit.row + dx;
       let newCol = previousHit.col + dy;
@@ -46,10 +47,10 @@ const computerAttackLogic = (() => {
 
       const targetShip = playerBoard[newRow][newCol];
       if (targetShip) {
-        return handleSuccessfulHit(newRow, newCol);
+        return handleSuccessfulHit(newRow, newCol, 'smart');
         
       }else{
-        return handleMiss(newRow, newCol);
+        return handleMiss(newRow, newCol, 'smart');
       }
     
 
@@ -57,6 +58,40 @@ const computerAttackLogic = (() => {
     console.log("no valid smart hit found");
     return RandomHit(HitPlayerBoard);
   };
+
+  const HuntingMode = (previousHit, HitPlayerBoard) => {
+    let row = previousHit.row; // Stay in the same row
+    let col = previousHit.col - 1; // Start at -1 from previous column
+  
+    // Keep moving left until we find a valid, unhit square
+    while (isValidCoordinate(row, col) && HitPlayerBoard.includes(`${row}${col}`)) {
+      col--; // Move left
+    }
+  
+    // If we found a valid unhit square, attack it
+    if (isValidCoordinate(row, col)) {
+      const targetShip = playerBoard[row][col];
+      if (targetShip) {
+        return handleSuccessfulHit(row, col, 'hunting');
+      } else {
+        return handleMiss(row, col, 'hunting');
+      }
+    }
+  
+    // If no valid move is found, return to random mode
+    return RandomHit(HitPlayerBoard);
+
+  }
+
+
+
+
+
+
+
+
+
+
 
   const isValidCoordinate = (row, col) => {
     if (row >= 0 && row < 10 && col >= 0 && col < 10) {
@@ -66,23 +101,19 @@ const computerAttackLogic = (() => {
   };
 
   
-  const handleSuccessfulHit = (row, col) => {
+  const handleSuccessfulHit = (row, col, typeofHit) => {
     const targetShip = playerBoard[row][col];
 
     targetShip.hit();
     domController.updateColor(row, col, "hit", "player");
 
     if (targetShip.isSunk()) {
-      handleShipSunk(targetShip);
+       typeofHit = handleShipSunk(targetShip);
     }
 
-    return { isHit: true, row, col };
+    return { isHit: true, row, col, typeofHit };
   };
 
-  const handleMiss = (row, col) => {
-    domController.updateColor(row, col, "miss", "player");
-    return { isHit: false, row, col };
-  };
 
   const handleShipSunk = (targetShip) => {
     for (let { row, col } of targetShip.shipCoordinates) {
@@ -94,9 +125,14 @@ const computerAttackLogic = (() => {
       gameMessage.textContent = "Computer has won. Game Over!";
       // computerBoardElement.removeEventListener("click", handlePlayerAttack);
     }
+    return 'sunk'
+  };
+  const handleMiss = (row, col, typeofHit) => {
+    domController.updateColor(row, col, "miss", "player");
+    return { isHit: false, row, col, typeofHit: typeofHit };
   };
 
-  return { RandomHit, smartHit };
+  return { RandomHit, smartHit, HuntingMode };
 })();
 
 export default computerAttackLogic;

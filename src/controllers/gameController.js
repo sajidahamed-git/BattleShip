@@ -70,28 +70,57 @@ const Game = (() => {
     }
   };
 
-  let previousHit = { isHit: false, row: null, col: null };
+  let previousHit = { isHit: false, row: null, col: null, typeofHit: null };
   let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
   const computerTurn = () => {
-    let result
-    if (!previousHit.isHit) {
+    let result;
+
+    if (previousHit.typeofHit === 'sunk') {
+      console.log('last attack sunk a ship switching to RandomHit');
+      result = computerAttackLogic.RandomHit(HitPlayerBoard)
+    }
+  
+    // If the last hit was successful in hunting mode, continue hunting in the same direction.
+
+   else if (previousHit.isHit && previousHit.typeofHit === 'hunting') {
+      console.log('Calling HuntingMode consecutively');
+      result = computerAttackLogic.HuntingMode(previousHit, HitPlayerBoard);
+    } 
+    // If the last hit was a miss and was part of smart or hunting mode, switch to hunting mode.
+    else if (!previousHit.isHit && previousHit.typeofHit !== 'random') {
+      console.log('Calling HuntingMode');
+      result = computerAttackLogic.HuntingMode(previousHit, HitPlayerBoard);
+    } 
+    // If the last hit was a miss and not part of a targeted search, pick a random hit.
+    else if (!previousHit.isHit) {
+      console.log('Calling RandomHit');
       result = computerAttackLogic.RandomHit(HitPlayerBoard);
-    } else{
+    } 
+    // Otherwise, use smart targeting to continue hitting around a successful hit.
+    else {
+      console.log('Calling SmartHit');
       result = computerAttackLogic.smartHit(previousHit, HitPlayerBoard);
     }
-    if (result.row !==null && result.col !==null) {
+  
+    // If the attack was valid, record the hit and update previousHit.
+    if (result.row !== null && result.col !== null) {
       HitPlayerBoard.push(`${result.row}${result.col}`);
       previousHit = result;
+      console.log(previousHit);
     }
+  
+    // Change turns after the computer's move.
     changeCurrentPlayer();
-    return true; // for teting purposes
+    return true; // For testing purposes
   };
+  
 
   const changeCurrentPlayer = () => {
     currentPlayer = currentPlayer === "player" ? "computer" : "player";
   };
 
   const handleComputerShipSunk = (targetShip) => {
+    //used to handle ships sunk by the player on the computer board
     for (let { row, col } of targetShip.shipCoordinates) {
       domController.updateColor(row, col, "sunk", "computer");
     }
