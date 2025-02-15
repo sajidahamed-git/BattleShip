@@ -88,11 +88,6 @@ const computerAttackLogic = (() => {
 
 
 
-
-
-
-
-
   const isValidCoordinate = (row, col) => {
     if (row >= 0 && row < 10 && col >= 0 && col < 10) {
       return true;
