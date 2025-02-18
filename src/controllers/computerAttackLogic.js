@@ -17,10 +17,14 @@ const computerAttackLogic = (() => {
     const targetShip = playerBoard[row][col];
 
     if (targetShip) {
-      return handleSuccessfulHit(row, col,'random');
+      handleSuccessfulHit(row, col,'random');
+      return { isHit: true, row, col };
+
     }else {
 
-      return handleMiss(row, col,'random');
+       handleMiss(row, col,'random');
+       return { isHit: false, row, col };
+
     }
     
   };
@@ -33,23 +37,27 @@ const computerAttackLogic = (() => {
       [-1, 0],
     ];
     for (let [dx, dy] of directions) {
-      let newRow = previousHit.row + dx;
-      let newCol = previousHit.col + dy;
-      let coordinatekey = `${newRow}${newCol}`;
+      let row = previousHit.row + dx;
+      let col= previousHit.col + dy;
+      let coordinatekey = `${row}${col}`;
 
       if (
         HitPlayerBoard.includes(coordinatekey) ||
-        !isValidCoordinate(newRow, newCol)
+        !isValidCoordinate(row,col)
       ) {
         continue;
       }
 
-      const targetShip = playerBoard[newRow][newCol];
+      const targetShip = playerBoard[row][col];
       if (targetShip) {
-        return handleSuccessfulHit(newRow, newCol, 'smart');
+        handleSuccessfulHit(row,col);
+        return { isHit: true, row, col };
+
         
       }else{
-        return handleMiss(newRow, newCol, 'smart');
+        handleMiss(row,col);
+        return { isHit: false, row, col };
+
       }
     
 
@@ -71,9 +79,15 @@ const computerAttackLogic = (() => {
     if (isValidCoordinate(row, col)) {
       const targetShip = playerBoard[row][col];
       if (targetShip) {
-        return handleSuccessfulHit(row, col, 'hunting');
+        handleSuccessfulHit(row, col);
+        return { isHit: true, row, col };
+
+
       } else {
-        return handleMiss(row, col, 'hunting');
+        handleMiss(row, col);
+        return { isHit: false, row, col };
+
+
       }
     }
   
@@ -90,20 +104,24 @@ const computerAttackLogic = (() => {
   };
 
   
-  const handleSuccessfulHit = (row, col, typeofHit) => {
+  const handleSuccessfulHit = (row, col) => {
     const targetShip = playerBoard[row][col];
 
     targetShip.hit();
     domController.updateColor(row, col, "hit", "player");
 
     if (targetShip.isSunk()) {
-       typeofHit = handleShipSunk(targetShip);
+       handleShipSunk(targetShip);
     }
 
-    return { isHit: true, row, col, typeofHit };
+    return { isHit: true, row, col };
   };
 
 
+
+  const handleMiss = (row, col) => {
+    domController.updateColor(row, col, "miss", "player");
+  };
   const handleShipSunk = (targetShip) => {
     for (let { row, col } of targetShip.shipCoordinates) {
       domController.updateColor(row, col, "sunk", "player");
@@ -115,10 +133,6 @@ const computerAttackLogic = (() => {
       // computerBoardElement.removeEventListener("click", handlePlayerAttack);
     }
     return 'sunk'
-  };
-  const handleMiss = (row, col, typeofHit) => {
-    domController.updateColor(row, col, "miss", "player");
-    return { isHit: false, row, col, typeofHit: typeofHit };
   };
 
   return { RandomHit, smartHit, HuntingMode };
