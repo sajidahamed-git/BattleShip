@@ -5,7 +5,7 @@ const computerAttackLogic = (() => {
   const playerBoard = shipPlacer.playerBoard;
   let noofshipsSunkbythecomputer = 0;
   let initialHit = { row: null, col: null };
-  let direction;
+  let Shipdirection;
 
   const gameMessage = document.getElementById("game-message");
 
@@ -21,10 +21,24 @@ const computerAttackLogic = (() => {
       handleSuccessfulHit(row, col, "random");
       initialHit.row = row;
       initialHit.col = col;
-      return { initialHit:initialHit,isHit: true, row, col, mode: "findingDirection",direction };
+      return {
+        initialHit: initialHit,
+        // isHit: true,
+        row,
+        col,
+        mode: "findingDirection",
+        direction:Shipdirection,
+      };
     } else {
       handleMiss(row, col, "random");
-      return {initialHit, isHit: false, row, col, mode: "searching",direction };
+      return {
+        initialHit,
+        // isHit: false,
+        row,
+        col,
+        mode: "searching",
+        direction:Shipdirection,
+      };
     }
   };
   const findShipDirection = (HitPlayerBoard) => {
@@ -32,37 +46,51 @@ const computerAttackLogic = (() => {
     const initialHitCol = initialHit.col;
     const orderedDirections = [
       { direction: "horizontal", dx: 0, dy: 1 },
-      { direction:"vertical", dx: 1, dy: 0 },
+      { direction: "vertical", dx: 1, dy: 0 },
       { direction: "horizontal", dx: 0, dy: -1 },
       { direction: "vertical", dx: -1, dy: 0 },
     ];
-    let i = previousHit.lastCheckedIndex || 0;
 
-    while (i < orderedDirections.length) {
+    for (let i = 0; i < orderedDirections.length; i++) {
       const { direction, dx, dy } = orderedDirections[i];
       const row = initialHitRow + dx;
       const col = initialHitCol + dy;
       const coordinateKey = `${row}${col}`;
 
-      if (isValidCoordinate(row, col) &&!HitPlayerBoard.includes(coordinateKey)) {
-        console.log(row, col);
-        const targetShip = playerBoard[row][col]; // **Corrected syntax: [row][col]**
-        if (targetShip) {
-          console.log(`Direction found: ${direction}`);
-          handleSuccessfulHit(row, col);
-          // return directionType; // Found a hit in this direction, return direction
-          return {
-            isHit: false,
-            row,
-            col,
-            mode: "sinking",
-            direction:direction,
-          };
-        } else {
-          handleMiss(row, col);
-          console.log("Direction not immediately found.");
-          return { isHit: false, row, col, mode: "findingDirection" };
-        }
+      if (
+        !isValidCoordinate(row, col) &&
+        HitPlayerBoard.includes(coordinateKey)
+      ) {
+        continue;
+        //skip this coordinates and look for next
+      }
+
+      console.log(row, col);
+      const targetShip = playerBoard[row][col]; // **Corrected syntax: [row][col]**
+      if (targetShip) {
+        console.log(`Direction found: ${direction}`);
+        handleSuccessfulHit(row, col);
+        Shipdirection = direction
+        // return directionType; // Found a hit in this direction, return direction
+        return {
+          initialHit:initialHit,
+          // isHit: false,
+          row,
+          col,
+          mode: "sinking",
+          direction: direction,
+        };
+      } else {
+        handleMiss(row, col);
+        console.log("Direction not immediately found.");
+        return {
+          initialHit:initialHit,
+          // isHit: false,
+          row,
+          col,
+          mode: "findingDirection",
+          direction:null
+        };
       }
     }
   };
