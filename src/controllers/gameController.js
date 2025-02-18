@@ -70,44 +70,27 @@ const Game = (() => {
     }
   };
 
-  let previousHit = { isHit: false, row: null, col: null, typeofHit: null };
+  let previousHit = { initialHit: null,isHit: false, row: null, col: null, mode:'searching',direction:null };
   let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
   const computerTurn = () => {
     let result;
-
-    if (previousHit.typeofHit === 'sunk') {
-      console.log('last attack sunk a ship switching to RandomHit');
+    if (previousHit.mode === 'searching') {
       result = computerAttackLogic.RandomHit(HitPlayerBoard)
+      console.log('searching called and result is ',result);
     }
-  
-    // If the last hit was successful in hunting mode, continue hunting in the same direction.
+    else if (previousHit.mode === 'findingDirection') {
+      
+      result = computerAttackLogic.findShipDirection(HitPlayerBoard)
+      console.log('finding direction called and result is ',result);
+    }
+    else if (previousHit.mode === 'sinking'){
+      console.log(`entering sinking mode as we know both direction
+        ${previousHit.direction} and initial hit ${previousHit.initialHit}`);
+    }
 
-   else if (previousHit.isHit && previousHit.typeofHit === 'hunting') {
-      console.log('Calling HuntingMode consecutively');
-      result = computerAttackLogic.HuntingMode(previousHit, HitPlayerBoard);
-    } 
-    // If the last hit was a miss and was part of smart or hunting mode, switch to hunting mode.
-    else if (!previousHit.isHit && previousHit.typeofHit !== 'random') {
-      console.log('Calling HuntingMode');
-      result = computerAttackLogic.HuntingMode(previousHit, HitPlayerBoard);
-    } 
-    // If the last hit was a miss and not part of a targeted search, pick a random hit.
-    else if (!previousHit.isHit) {
-      console.log('Calling RandomHit');
-      result = computerAttackLogic.RandomHit(HitPlayerBoard);
-    } 
-    // Otherwise, use smart targeting to continue hitting around a successful hit.
-    else {
-      console.log('Calling SmartHit');
-      result = computerAttackLogic.smartHit(previousHit, HitPlayerBoard);
-    }
   
-    // If the attack was valid, record the hit and update previousHit.
-    if (result.row !== null && result.col !== null) {
-      HitPlayerBoard.push(`${result.row}${result.col}`);
+      // HitPlayerBoard.push(`${result.row}${result.col}`);
       previousHit = result;
-      console.log(previousHit);
-    }
   
     // Change turns after the computer's move.
     changeCurrentPlayer();
