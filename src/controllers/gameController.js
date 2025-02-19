@@ -91,27 +91,12 @@ const Game = (() => {
       console.log("finding direction called and result is ", result);
     } 
     else if (previousHit.mode === "sinking") {
-      if (previousHit.direction) {
-        let moveDirection = previousHit.moveDirection || (previousHit.direction === 'horizontal' ? 'right' : 'bottom');
-        result = computerAttackLogic.sinkShip(moveDirection)
-        console.log('sinking mode called result',result);
-      }else {
-        console.log('no direction set switching to searching mode');
-        previousHit.mode = 'searching'
-        return 
+      result = computerAttackLogic.sinkShip(previousHit)
       }
 
-    }
     if (result) {
-
-      // Ensure previousHit keeps critical data
-      previousHit = {
-          ...previousHit, // Retain previous data
-          ...result,      // Update with new result
-          initialHit: previousHit.initialHit || result.initialHit,
-          moveDirection: result.moveDirection || previousHit.moveDirection,
+        previousHit = result
       };
-  }
 
     // Change turns after the computer's move.
     changeCurrentPlayer();
