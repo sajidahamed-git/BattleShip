@@ -57,9 +57,8 @@ const Game = (() => {
 
           if (targetShip.isSunk()) {
             handleComputerShipSunk(targetShip);
-              return;
-            }
-         
+            return;
+          }
         } else domController.updateColor(row, col, "miss", "computer");
 
         changeCurrentPlayer();
@@ -70,33 +69,54 @@ const Game = (() => {
     }
   };
 
-  let previousHit = { initialHit: null,isHit: false, row: null, col: null, mode:'searching',direction:null };
-  let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
+  let previousHit = {
+    initialHit: null,
+    isHit: false,
+    row: null,
+    col: null,
+    mode: "searching",
+    direction: null,
+    moveDirection:null,
+  };
   const computerTurn = () => {
     let result;
-    if (previousHit.mode === 'searching') {
-      result = computerAttackLogic.RandomHit(HitPlayerBoard)
-      console.log('searching called and result is ',result);
-    }
-    else if (previousHit.mode === 'findingDirection') {
-      
-      result = computerAttackLogic.findShipDirection(HitPlayerBoard)
-      console.log('finding direction called and result is ',result);
-    }
-    else if (previousHit.mode === 'sinking'){
-      console.log(`entering sinking mode as we know both direction
-        ${previousHit.direction} and initial hit ${previousHit.initialHit}`);
-    }
+    console.log('computer Turn mode',previousHit.mode);
 
-  
-      // HitPlayerBoard.push(`${result.row}${result.col}`);
-      previousHit = result;
-  
+    if (previousHit.mode === "searching") {
+      result = computerAttackLogic.RandomHit();
+      console.log("searching called and result is ", result);
+    } 
+    else if (previousHit.mode === "findingDirection") {
+      result = computerAttackLogic.findShipDirection();
+      console.log("finding direction called and result is ", result);
+    } 
+    else if (previousHit.mode === "sinking") {
+      if (previousHit.direction) {
+        let moveDirection = previousHit.moveDirection || (previousHit.direction === 'horizontal' ? 'right' : 'bottom');
+        result = computerAttackLogic.sinkShip(moveDirection)
+        console.log('sinking mode called result',result);
+      }else {
+        console.log('no direction set switching to searching mode');
+        previousHit.mode = 'searching'
+        return 
+      }
+
+    }
+    if (result) {
+
+      // Ensure previousHit keeps critical data
+      previousHit = {
+          ...previousHit, // Retain previous data
+          ...result,      // Update with new result
+          initialHit: previousHit.initialHit || result.initialHit,
+          moveDirection: result.moveDirection || previousHit.moveDirection,
+      };
+  }
+
     // Change turns after the computer's move.
     changeCurrentPlayer();
     return true; // For testing purposes
   };
-  
 
   const changeCurrentPlayer = () => {
     currentPlayer = currentPlayer === "player" ? "computer" : "player";
@@ -113,11 +133,11 @@ const Game = (() => {
       gameMessage.textContent = "Player has won. Game Over!";
       computerBoardElement.removeEventListener("click", handlePlayerAttack);
     }
-  }
+  };
 
   return {
     initialize,
-    start
+    start,
   };
 })();
 

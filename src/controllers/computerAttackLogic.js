@@ -6,10 +6,11 @@ const computerAttackLogic = (() => {
   let noofshipsSunkbythecomputer = 0;
   let initialHit = { row: null, col: null };
   let Shipdirection;
+  let HitPlayerBoard = []; //stores coordinates of already hit cells in player board
 
   const gameMessage = document.getElementById("game-message");
 
-  const RandomHit = (HitPlayerBoard) => {
+  const RandomHit = () => {
     let row, col;
     do {
       row = Math.floor(Math.random() * 10);
@@ -27,21 +28,21 @@ const computerAttackLogic = (() => {
         row,
         col,
         mode: "findingDirection",
-        direction:Shipdirection,
+        direction: Shipdirection,
       };
     } else {
-      handleMiss(row, col, "random");
+      handleMiss(row, col);
       return {
         initialHit,
         // isHit: false,
         row,
         col,
         mode: "searching",
-        direction:Shipdirection,
+        direction: Shipdirection,
       };
     }
   };
-  const findShipDirection = (HitPlayerBoard) => {
+  const findShipDirection = () => {
     const initialHitRow = initialHit.row;
     const initialHitCol = initialHit.col;
     const orderedDirections = [
@@ -58,7 +59,7 @@ const computerAttackLogic = (() => {
       const coordinateKey = `${row}${col}`;
 
       if (
-        !isValidCoordinate(row, col) &&
+        !isValidCoordinate(row, col) ||
         HitPlayerBoard.includes(coordinateKey)
       ) {
         continue;
@@ -70,10 +71,10 @@ const computerAttackLogic = (() => {
       if (targetShip) {
         console.log(`Direction found: ${direction}`);
         handleSuccessfulHit(row, col);
-        Shipdirection = direction
+        Shipdirection = direction;
         // return directionType; // Found a hit in this direction, return direction
         return {
-          initialHit:initialHit,
+          initialHit: initialHit,
           // isHit: false,
           row,
           col,
@@ -84,51 +85,17 @@ const computerAttackLogic = (() => {
         handleMiss(row, col);
         console.log("Direction not immediately found.");
         return {
-          initialHit:initialHit,
+          initialHit: initialHit,
           // isHit: false,
           row,
           col,
           mode: "findingDirection",
-          direction:null
+          direction: null,
         };
       }
     }
   };
 
-  // const smartHit = (previousHit, HitPlayerBoard) => {
-  //   const directions = [
-  //     [0, 1],
-  //     [1, 0],
-  //     [0, -1],
-  //     [-1, 0],
-  //   ];
-  //   for (let [dx, dy] of directions) {
-  //     let row = previousHit.row + dx;
-  //     let col= previousHit.col + dy;
-  //     let coordinatekey = `${row}${col}`;
-
-  //     if (
-  //       HitPlayerBoard.includes(coordinatekey) ||
-  //       !isValidCoordinate(row,col)
-  //     ) {
-  //       continue;
-  //     }
-
-  //     const targetShip = playerBoard[row][col];
-  //     if (targetShip) {
-  //       handleSuccessfulHit(row,col);
-  //       return { isHit: true, row, col };
-
-  //     }else{
-  //       handleMiss(row,col);
-  //       return { isHit: false, row, col };
-
-  //     }
-
-  //   }
-  //   console.log("no valid smart hit found");
-  //   return RandomHit(HitPlayerBoard);
-  // };
 
   const isValidCoordinate = (row, col) => {
     if (row >= 0 && row < 10 && col >= 0 && col < 10) {
