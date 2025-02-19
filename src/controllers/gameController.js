@@ -71,9 +71,8 @@ const Game = (() => {
 
   let previousHit = {
     initialHit: null,
+    lastHit:null,
     isHit: false,
-    row: null,
-    col: null,
     mode: "searching",
     direction: null,
     moveDirection:null,
@@ -91,6 +90,7 @@ const Game = (() => {
       console.log("finding direction called and result is ", result);
     } 
     else if (previousHit.mode === "sinking") {
+      console.log('sink Mode activated');
       result = computerAttackLogic.sinkShip(previousHit)
       }
 
