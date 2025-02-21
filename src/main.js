@@ -3,26 +3,30 @@ import Game from "./controllers/gameController";
 import domController from "./controllers/domController";
 
 const ui = {
-  form: document.getElementById("player-form"),
+  // form: document.getElementById("player-form"),
   gameContainer: document.getElementById("game-container"),
   gameMessage: document.getElementById("game-message"),
   flipShipDirectionButton: document.getElementById("flip-ship-direction"),
-  playerNameInput: document.getElementById("player-name"),
+  // playerNameInput: document.getElementById("player-name"),
   startButton: document.getElementById("start-button"),
-  computerBoard: document.getElementById('computer-board')
+  computerBoard: document.getElementById('computer-board'),
+  mode:document.getElementById('mode'),
+
+  single: document.getElementById('single'),
+  multi:document.getElementById('multi')
+
 };
 
-ui.form.addEventListener("submit", (e) => {
+ui.single.addEventListener("click", (e) => {
   e.preventDefault();
-  const playerName = document.getElementById("player-name").value;
-  //no use for playerName as of now
-  Game.initialize();
 
+  Game.initialize();
+  ui.mode.classList.add('hidden')
   ui.gameMessage.classList.remove("hidden");
   ui.gameContainer.classList.remove("hidden");
   ui.flipShipDirectionButton.classList.remove("hidden");
 
-  ui.form.classList.add("hidden");
+  // ui.form.classList.add("hidden");
   domController.attachFlipShipListener(ui.flipShipDirectionButton);
 });
 ui.startButton.addEventListener("click", () => {
