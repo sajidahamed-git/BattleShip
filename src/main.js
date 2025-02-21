@@ -19,8 +19,7 @@ const ui = {
 
 ui.single.addEventListener("click", (e) => {
   e.preventDefault();
-
-  Game.initialize();
+  Game.initialize('single');
   ui.mode.classList.add('hidden')
   ui.gameMessage.classList.remove("hidden");
   ui.gameContainer.classList.remove("hidden");
@@ -29,6 +28,18 @@ ui.single.addEventListener("click", (e) => {
   // ui.form.classList.add("hidden");
   domController.attachFlipShipListener(ui.flipShipDirectionButton);
 });
+ui.multi.addEventListener('click',(e)=> {
+  e.preventDefault()
+  Game.initialize('multi')
+  ui.mode.classList.add('hidden')
+  ui.gameMessage.classList.remove("hidden");
+  ui.gameContainer.classList.remove("hidden");
+  ui.flipShipDirectionButton.classList.remove("hidden");
+
+  // ui.form.classList.add("hidden");
+  domController.attachFlipShipListener(ui.flipShipDirectionButton);
+})
+
 ui.startButton.addEventListener("click", () => {
   console.log("start game");
   Game.start()

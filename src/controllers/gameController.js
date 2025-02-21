@@ -14,17 +14,33 @@ const Game = (() => {
   let currentPlayer = "player";
   let gameOver = false;
   let computerBoardElement, playerBoardElement;
+  let player1BoardElement,player2BoardElement
 
-  const initialize = () => {
-    playerBoardElement = document.getElementById("player-board");
-    computerBoardElement = document.getElementById("computer-board");
-    domController.createBoardCells(playerBoardElement, "player");
-    domController.createBoardCells(computerBoardElement, "computer");
-    shipPlacer.placeComputerShips(computerBoard);
-    const gameMessage = document.getElementById("game-message");
+  const initialize = (mode) => {
+    if (mode === 'single') {
+      playerBoardElement = document.getElementById("player-board");
+      computerBoardElement = document.getElementById("computer-board");
+      domController.createBoardCells(playerBoardElement, "player");
+      domController.createBoardCells(computerBoardElement, "computer");
+      shipPlacer.placeComputerShips(computerBoard);
+      const gameMessage = document.getElementById("game-message");
+      
+      gameMessage.textContent = `Place your carrier (length: 6)`;
+      return true; // for testing purposes
+    }
+    if (mode === 'multi') {
+      console.log('Multiplayer');
+      player1BoardElement = document.getElementById('player-board')
+      player2BoardElement = document.getElementById('computer-board') //use computer board for player 2 
+      domController.createBoardCells(player1BoardElement,'player')
+      domController.createBoardCells(player2BoardElement,'player')
+      const aa = document.getElementById('Player1')
+      aa.textContent = 'Player 1'
+      const bb = document.getElementById('Player2')
+      bb.textContent = "Player 2"
+      
+    }
 
-    gameMessage.textContent = `Place your carrier (length: 6)`;
-    return true; // for testing purposes
   };
 
   const start = () => {
