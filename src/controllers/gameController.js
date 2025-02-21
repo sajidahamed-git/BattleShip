@@ -85,15 +85,12 @@ const Game = (() => {
     } else if (previousHit.mode === "findingDirection") {
       result = computerAttackLogic.findShipDirection();
     } else if (previousHit.mode === "sinking") {
+      console.log('sinking ----',previousHit.Shipdirection);
       if (previousHit.Shipdirection === "horizontal") {
         result = computerAttackLogic.sinkHorizontalShip(previousHit)
-        // if (result.mode === 'searching') {
-          // result = computerAttackLogic.RandomHit()
-        // }
-        // console.log('main',result);
       }
       if (previousHit.Shipdirection === "vertical") {
-        console.log("sink vertical ship");
+        result = computerAttackLogic.sinkVerticalShip(previousHit)
       }
     }
 

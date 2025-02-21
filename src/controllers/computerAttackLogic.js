@@ -193,9 +193,9 @@ const computerAttackLogic = (() => {
     if (moveDirection === "left") {
       newRow = lastRow
       newCol =  lastCol -1 
-      if (newCol === initialCol) {
-        newCol = newCol -1
-      }
+      // if (newCol === initialCol) {
+        // newCol = newCol -1
+      // }
     }
 
     if (newCol > 9) {
@@ -245,6 +245,65 @@ const computerAttackLogic = (() => {
       };
     }
   };
+  const sinkVerticalShip = (previousHit) =>{
+    let lastRow = previousHit.lastHit.row;
+    let lastCol = previousHit.lastHit.col;
+    let initialHit = previousHit.initialHit;
+    let initialCol = previousHit.initialHit.col
+    let initialRow = previousHit.initialHit.row
+    let moveDirection = previousHit.moveDirection; // Always exists in sinking mode
+    let newRow;
+    let newCol = lastCol
+
+    if (moveDirection === 'down') {
+      newRow = lastRow + 1  
+    }
+    if (moveDirection === 'up') {
+      newRow  = lastRow -1
+    }
+    if (newRow>9) {
+      //no space in the bottom
+      console.log('direction changed due to bottom edge');
+      moveDirection = 'up'
+      newRow  = initialRow -1
+    }
+    if (newRow < 0) {
+      console.log('direction changed due to top edge');
+      moveDirection = 'down'
+      newRow = initialRow +1
+    }
+    console.log('momo',newRow,newCol);
+    const ship = playerBoard[newRow][newCol];
+
+    if (ship) {
+      handleSuccessfulHit(newRow, newCol);
+      if (ship.isSunk()) {
+        console.log("Ship is sunk, switching to searching mode.");
+        return { mode: "searching" };
+      }
+      return {
+        initialHit,
+        lastHit: { row:newRow , col: newCol }, 
+        mode: "sinking",
+        Shipdirection: "vertical",
+        moveDirection,
+      };
+    } else {
+      console.log('missed while sinking');
+      handleMiss(newRow, newCol);
+
+      moveDirection = moveDirection === "down" ? "up" : "down";
+      return {
+        initialHit,
+        //here when we miss while sinking we set the last hit as 
+        //initial hit so that we can reuse
+        lastHit: { row: initialRow, col: initialCol},  //this was the key which chatGPT could not figure out
+        mode: "sinking",
+        Shipdirection: "vertical",
+        moveDirection,
+      };
+    }
+  }
 
   const isCellValid = (row, col) => {
     return (
@@ -291,7 +350,7 @@ const computerAttackLogic = (() => {
     return "sunk";
   };
 
-  return { RandomHit, findShipDirection, sinkHorizontalShip };
+  return { RandomHit, findShipDirection, sinkHorizontalShip,sinkVerticalShip };
 })();
 
 export default computerAttackLogic;
