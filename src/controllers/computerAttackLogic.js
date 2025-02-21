@@ -197,25 +197,21 @@ const computerAttackLogic = (() => {
         newCol = newCol -1
       }
     }
-    if (newCol>9 || newCol < 0 ) {
-      //handle 
+
+    if (newCol > 9) {
+      //no space in right side 
+      console.log('direction changed due to edge');
+      moveDirection = 'left'
+      newCol = initialCol - 1
+
+    }
+    if (newCol < 0) {
+      //no space in left side
+      console.log('direction changed due to edge');
+      moveDirection = 'right'
+      newCol = initialCol + 1
     }
 
-    // If the move is invalid or a miss, switch direction
-    // if (!isCellValid(newRow, newCol) || HitPlayerBoard.includes(`${newRow}${newCol}`)) {
-    //   console.log("Invalid move or cell already hit, switching direction:", newRow, newCol);
-
-    //   // Switch direction
-    //   moveDirection = moveDirection === "right" ? "left" : "right";
-
-    //   // Move **TWO** steps if the first step is the initial hit
-    //   newCol = moveDirection === "right" ? initialHit.col + 1 : initialHit.col - 1;
-
-    //   if (!isCellValid(lastRow, newCol) || HitPlayerBoard.includes(`${lastRow}${newCol}`)) {
-    //     console.log("Both directions blocked, switching to searching mode.");
-    //     return { mode: "searching" };
-    //   }
-    // }
 
     const ship = playerBoard[newRow][newCol];
 
@@ -227,7 +223,8 @@ const computerAttackLogic = (() => {
       }
       return {
         initialHit,
-        lastHit: { row:newRow , col: newCol }, //set last hit to initial hit while missing
+        
+        lastHit: { row:newRow , col: newCol }, 
         mode: "sinking",
         Shipdirection: "horizontal",
         moveDirection,
@@ -237,17 +234,11 @@ const computerAttackLogic = (() => {
       handleMiss(newRow, newCol);
 
       moveDirection = moveDirection === "right" ? "left" : "right";
-      // Instead of just switching direction, move one more step
-      // newCol = moveDirection === "right" ? newCol + 1 : newCol - 1;
-
-      // if (!isCellValid(lastRow, newCol) || HitPlayerBoard.includes(`${lastRow}${newCol}`)) {
-      //   console.log("No valid moves left, switching to searching mode.");
-      //   return { mode: "searching" };
-      // }
-
       return {
         initialHit,
-        lastHit: { row: initialRow, col: initialCol},
+        //here when we miss while sinking we set the last hit as 
+        //initial hit so that we can reuse
+        lastHit: { row: initialRow, col: initialCol},  //this was the key which chatGPT could not figure out
         mode: "sinking",
         Shipdirection: "horizontal",
         moveDirection,
