@@ -276,7 +276,7 @@ const computerAttackLogic = (() => {
 
     if (noofshipsSunkbythecomputer === 5) {
       gameMessage.textContent = "Computer has won. Game Over!";
-      // computerBoardElement.removeEventListener("click", handlePlayerAttack);
+      computerBoardElement.removeEventListener("click", handlePlayerAttack);
     }
     return "sunk";
   };
