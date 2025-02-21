@@ -78,18 +78,19 @@ const Game = (() => {
   };
   const computerTurn = () => {
     let result;
-    console.log("computer Turn mode", previousHit.mode);
+    console.log('--',previousHit.mode);
 
     if (previousHit.mode === "searching") {
       result = computerAttackLogic.RandomHit();
     } else if (previousHit.mode === "findingDirection") {
       result = computerAttackLogic.findShipDirection();
-      console.log("finding direction called and result is ", result);
     } else if (previousHit.mode === "sinking") {
-      console.log("sink Mode activated");
       if (previousHit.Shipdirection === "horizontal") {
         result = computerAttackLogic.sinkHorizontalShip(previousHit)
-        console.log('main',result);
+        // if (result.mode === 'searching') {
+          // result = computerAttackLogic.RandomHit()
+        // }
+        // console.log('main',result);
       }
       if (previousHit.Shipdirection === "vertical") {
         console.log("sink vertical ship");
