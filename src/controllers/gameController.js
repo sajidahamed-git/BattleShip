@@ -57,7 +57,6 @@ const Game = (() => {
 
           if (targetShip.isSunk()) {
             handleComputerShipSunk(targetShip);
-            return;
           }
         } else domController.updateColor(row, col, "miss", "computer");
 
@@ -71,32 +70,35 @@ const Game = (() => {
 
   let previousHit = {
     initialHit: null,
-    lastHit:null,
+    lastHit: null,
     isHit: false,
     mode: "searching",
-    direction: null,
-    moveDirection:null,
+    Shipdirection: null,
+    moveDirection: null,
   };
   const computerTurn = () => {
     let result;
-    console.log('computer Turn mode',previousHit.mode);
+    console.log("computer Turn mode", previousHit.mode);
 
     if (previousHit.mode === "searching") {
       result = computerAttackLogic.RandomHit();
-      console.log("searching called and result is ", result);
-    } 
-    else if (previousHit.mode === "findingDirection") {
+    } else if (previousHit.mode === "findingDirection") {
       result = computerAttackLogic.findShipDirection();
       console.log("finding direction called and result is ", result);
-    } 
-    else if (previousHit.mode === "sinking") {
-      console.log('sink Mode activated');
-      result = computerAttackLogic.sinkShip(previousHit)
+    } else if (previousHit.mode === "sinking") {
+      console.log("sink Mode activated");
+      if (previousHit.Shipdirection === "horizontal") {
+        result = computerAttackLogic.sinkHorizontalShip(previousHit)
+        console.log('main',result);
       }
+      if (previousHit.Shipdirection === "vertical") {
+        console.log("sink vertical ship");
+      }
+    }
 
     if (result) {
-        previousHit = result
-      };
+      previousHit = result;
+    }
 
     // Change turns after the computer's move.
     changeCurrentPlayer();

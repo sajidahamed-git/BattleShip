@@ -28,7 +28,7 @@ const computerAttackLogic = (() => {
         lastHit: { row, col },
         // isHit: true,
         mode: "findingDirection",
-        direction: Shipdirection,
+        Shipdirection: Shipdirection,
       };
     } else {
       handleMiss(row, col);
@@ -37,7 +37,7 @@ const computerAttackLogic = (() => {
         // isHit: false,
         lastHit: { row, col },
         mode: "searching",
-        direction: Shipdirection,
+        Shipdirection: Shipdirection,
       };
     }
   };
@@ -47,13 +47,13 @@ const computerAttackLogic = (() => {
 
     // Ordered directions to check: right → down → left → up
     const orderedDirections = [
-      { direction: "horizontal", dx: 0, dy: 1 }, // Right
-      { direction: "vertical", dx: 1, dy: 0 }, // Down
-      { direction: "horizontal", dx: 0, dy: -1 }, // Left
-      { direction: "vertical", dx: -1, dy: 0 }, // Up
+      { direction: "horizontal", dx: 0, dy: 1, moveDirection: "right" }, // Right
+      { direction: "vertical", dx: 1, dy: 0, moveDirection: "down" }, // Down
+      { direction: "horizontal", dx: 0, dy: -1, moveDirection: "left" }, // Left
+      { direction: "vertical", dx: -1, dy: 0, moveDirection: "up" }, // Up
     ];
 
-    for (const { direction, dx, dy } of orderedDirections) {
+    for (const { direction, dx, dy,moveDirection } of orderedDirections) {
       const newRow = initialHitRow + dx;
       const newCol = initialHitCol + dy;
       const coordinateKey = `${newRow}${newCol}`;
@@ -70,20 +70,21 @@ const computerAttackLogic = (() => {
         );
         continue;
       }
+      const ship= playerBoard[newRow][newCol];
 
-      const targetShip = playerBoard[newRow][newCol];
-
-      if (targetShip) {
+      if (ship) {
         console.log(`Direction found: ${direction}`);
         handleSuccessfulHit(newRow, newCol);
         Shipdirection = direction; // Set the global Shipdirection
-
+        if (ship.isSunk()) {
+          return {mode:'searching'}
+        }
         return {
           initialHit,
-          lastHit: { newRow, newCol },
-
+          lastHit: { row:newRow, col:newCol },
           mode: "sinking",
-          direction: direction,
+          Shipdirection: direction,
+          moveDirection:moveDirection
         };
       } else {
         handleMiss(newRow, newCol);
@@ -91,10 +92,12 @@ const computerAttackLogic = (() => {
 
         return {
           initialHit,
-          lastHit: { newRow, newCol },
+          lastHit: { row:newRow, col:newCol },
 
           mode: "findingDirection",
-          direction: null,
+          Shipdirection: null,
+          moveDirection:moveDirection
+
         };
       }
     }
@@ -104,21 +107,144 @@ const computerAttackLogic = (() => {
     return { mode: "searching" };
   };
 
-  const sinkShip = (previousHit) => {
-    let row = previousHit.row;
-    let col = previousHit.col;
-    console.log(previousHit);
-    console.log(targetShip);
-    if (Shipdirection === "horizontal") {
-      row = row + 1;
-      if (
-        isValidCoordinate(row, col) &&
-        HitPlayerBoard.includes(`${row}${col}`)
-      ) {
-        console.log(row, col);
+//   const sinkShip = (previousHit) => {
+//     console.log("sinkShip called with:", previousHit);
+//     console.log(previousHit);
+
+//     // Extract data
+//     let lastRow = previousHit.lastHit.row;
+//     let lastCol = previousHit.lastHit.col;
+//     let initialRow = previousHit.initialHit.row;
+//     let initialCol = previousHit.initialHit.col;
+
+//     let moveDirection = previousHit.moveDirection; // Always exists in sinking mode
+//     let newRow = lastRow;
+//     let newCol = lastCol;
+
+//     // Move in the current direction
+//     if (moveDirection === "right") newCol += 1;
+//     if (moveDirection === "left") newCol -= 1;
+//     if (moveDirection === "bottom") newRow += 1;
+//     if (moveDirection === "up") newRow -= 1;
+
+//     // If the new move is invalid, switch direction from initialHit
+//     if (!isCellValid(newRow, newCol)) {
+//         console.log("Invalid move detected, switching direction...");
+
+//         // Reset to initial hit
+//         newRow = initialRow;
+//         newCol = initialCol;
+
+//         // Switch direction
+//         if (moveDirection === "right") moveDirection = "left";
+//         else if (moveDirection === "left") moveDirection = "right";
+//         else if (moveDirection === "bottom") moveDirection = "top";
+//         else if (moveDirection === "top") moveDirection = "bottom";
+
+//         // Move in the new direction
+//         if (moveDirection === "right") newCol += 1;
+//         if (moveDirection === "left") newCol -= 1;
+//         if (moveDirection === "bottom") newRow += 1;
+//         if (moveDirection === "top") newRow -= 1;
+//     }
+
+//     // If the new move is still valid, attack
+//     if (isCellValid(newRow, newCol)) {
+//         let targetShip = playerBoard[newRow][newCol];
+
+//         if (targetShip) {
+//             console.log(`Hit at ${newRow}, ${newCol}`);
+//             handleSuccessfulHit(newRow, newCol);
+//             return {
+//                 initialHit: previousHit.initialHit,
+//                 lastHit: { row: newRow, col: newCol },
+//                 mode: "sinking",
+//                 moveDirection: moveDirection
+//             };
+//         } else {
+//             console.log(`Miss at ${newRow}, ${newCol}`);
+//             handleMiss(newRow, newCol);
+//             return {
+//                 initialHit: previousHit.initialHit,
+//                 lastHit: previousHit.lastHit, // Keep last hit unchanged on miss
+//                 mode: "sinking",
+//                 moveDirection: moveDirection
+//             };
+//         }
+//     }
+
+//     console.log("No valid moves left. Reverting to searching mode.");
+//     return { mode: "searching" };
+// };
+const sinkHorizontalShip = (previousHit) =>{
+  // console.log('main ',previousHit);
+  let lastRow = previousHit.lastHit.row;
+  let lastCol = previousHit.lastHit.col;
+  console.log(previousHit);
+  console.log(lastRow,lastCol);
+  let initialHit = previousHit.initialHit
+  let initialRow = previousHit.initialHit.row;
+  let initialCol = previousHit.initialHit.col;
+
+  let moveDirection = previousHit.moveDirection; // Always exists in sinking mode
+  let newRow = lastRow;
+  let newCol = lastCol;
+
+
+  if (moveDirection === 'right' )  newCol +=1
+  if (moveDirection === 'left') newCol -=1
+
+    if (!isCellValid(newRow,newCol)) {
+      console.log(newRow , newCol);
+      console.log('co ordinates are invalid');
+    }
+    console.log(newRow,newCol);
+
+    const  ship  = playerBoard[newRow][newCol]
+    if (ship) {
+      handleSuccessfulHit(newRow,newCol)
+      console.log(ship.isSunk());
+      if (ship.isSunk()) {
+        console.log('ship is sunk next round will call random hit');
+        return {mode:'searching'}
+      }
+      return {
+        initialHit,
+        lastHit: {row:newRow,col:newCol},
+        mode:'sinking',
+        Shipdirection,
+        moveDirection:moveDirection
+      }
+      
+    }else{
+      handleMiss(newRow,newCol)
+      moveDirection = moveDirection === 'right'? 'left':'right'
+      return {
+        initialHit,
+        lastHit: {row:newRow,col:newCol},
+        mode:'sinking',
+        Shipdirection,
+        moveDirection:moveDirection
+
       }
     }
-  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+  const isCellValid = (row, col) => {
+    return isValidCoordinate(row, col) && !HitPlayerBoard.includes(`${row}${col}`);
+};
 
   const isValidCoordinate = (row, col) => {
     if (row >= 0 && row < 10 && col >= 0 && col < 10) {
@@ -137,7 +263,7 @@ const computerAttackLogic = (() => {
       handleShipSunk(targetShip1);
     }
     HitPlayerBoard.push(`${row}${col}`);
-    console.log(HitPlayerBoard);
+    // console.log(HitPlayerBoard);
 
     // return { isHit: true, row, col };
   };
@@ -145,7 +271,6 @@ const computerAttackLogic = (() => {
   const handleMiss = (row, col) => {
     domController.updateColor(row, col, "miss", "player");
     HitPlayerBoard.push(`${row}${col}`);
-    console.log(HitPlayerBoard);
   };
   const handleShipSunk = (targetShip1) => {
     for (let { row, col } of targetShip1.shipCoordinates) {
@@ -160,7 +285,7 @@ const computerAttackLogic = (() => {
     return "sunk";
   };
 
-  return { sinkShip, RandomHit, findShipDirection };
+  return { RandomHit, findShipDirection ,sinkHorizontalShip};
 })();
 
 export default computerAttackLogic;
